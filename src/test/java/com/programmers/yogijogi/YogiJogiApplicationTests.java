@@ -9,5 +9,4 @@ class YogiJogiApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
