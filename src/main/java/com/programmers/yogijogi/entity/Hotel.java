@@ -24,9 +24,23 @@ public class Hotel {
     private String name;
 
     @Builder
-    public Hotel(String name) {
+    public Hotel(String name, Region region) {
         this.name = name;
+        this.region = region;
     }
+
+    @Column(name = "region")
+    @Enumerated(EnumType.STRING)
+    private Region region;
+
+    // 성급
+    @Column(name = "grade")
+    private int grade;
+
+    // 테마
+    @Column(name = "theme")
+    @Enumerated(EnumType.STRING)
+    private Theme theme;
 
     @OneToMany(mappedBy = "hotel")
     private final List<Review> reviews = new ArrayList<>();
