@@ -1,5 +1,8 @@
 package com.programmers.yogijogi.entity;
 
-public enum Region {
+import lombok.Getter;
 
+@Getter
+public enum Region {
+    seoul
 }
