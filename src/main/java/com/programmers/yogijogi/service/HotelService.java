@@ -10,7 +10,6 @@ import com.programmers.yogijogi.exception.NotFoundException;
 import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ImageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,13 @@ import javax.transaction.Transactional;
 @Service
 public class HotelService {
 
-    @Autowired
-    HotelRepository hotelRepository;
+    private final HotelRepository hotelRepository;
+    private final ImageRepository imageRepository;
 
-    @Autowired
-    ImageRepository imageRepository;
+    public HotelService(HotelRepository hotelRepository, ImageRepository imageRepository) {
+        this.hotelRepository = hotelRepository;
+        this.imageRepository = imageRepository;
+    }
 
     @Transactional
     public HotelDetailDto getOne(Long id) {
