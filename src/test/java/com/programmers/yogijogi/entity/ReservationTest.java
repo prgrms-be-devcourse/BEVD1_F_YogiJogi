@@ -1,5 +1,6 @@
 package com.programmers.yogijogi.entity;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +19,8 @@ class ReservationTest {
     void setReview() {
         // given
         Reservation reservation = Reservation.builder()
-                .checkIn(LocalDateTime.now())
-                .checkOut(LocalDateTime.now())
+                .checkIn(LocalDate.now())
+                .checkOut(LocalDate.now())
                 .build();
 
         Review review = Review.builder()
