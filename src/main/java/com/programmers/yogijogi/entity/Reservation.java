@@ -1,5 +1,6 @@
 package com.programmers.yogijogi.entity;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

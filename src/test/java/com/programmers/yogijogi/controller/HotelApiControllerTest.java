@@ -57,7 +57,7 @@ class HotelApiControllerTest {
     void setUp() {
         hotel = Hotel.builder()
                 .name("testName")
-                .region(Region.seoul)
+                .region(Region.Seocho)
                 .grade(5)
                 .theme(Theme.PC)
                 .build();
@@ -75,19 +75,19 @@ class HotelApiControllerTest {
                 .andDo(print());
     }
 
-    @Test
-    @DisplayName("호텔 이미지를 등록해야 한다.")
-    void uploadHotelImage() throws Exception {
-        File f = new File(IMAGE_SOURCE);
-        FileInputStream fis = new FileInputStream(f);
-
-        MockMultipartFile multipartFile = new MockMultipartFile("images", f.getName(), "multipart/form-data", fis);
-        mockMvc.perform(fileUpload("/hotels/{id}/images", hotelId)
-                        .file(multipartFile)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
+//    @Test
+//    @DisplayName("호텔 이미지를 등록해야 한다.")
+//    void uploadHotelImage() throws Exception {
+//        File f = new File(IMAGE_SOURCE);
+//        FileInputStream fis = new FileInputStream(f);
+//
+//        MockMultipartFile multipartFile = new MockMultipartFile("images", f.getName(), "multipart/form-data", fis);
+//        mockMvc.perform(fileUpload("/hotels/{id}/images", hotelId)
+//                        .file(multipartFile)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(print());
+//    }
 
     @Test
     @DisplayName("호텔의 이미지를 조회할 수 있어야한다.")
