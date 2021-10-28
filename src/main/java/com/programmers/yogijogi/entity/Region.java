@@ -38,4 +38,5 @@ public enum Region {
 
   // 한국어 이름
   public final String koreanName;
+
 }
