@@ -31,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
-@TestPropertySource("classpath:application-test.yaml")
 @ActiveProfiles("test")
 class HotelApiControllerTest {
 

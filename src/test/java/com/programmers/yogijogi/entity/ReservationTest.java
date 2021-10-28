@@ -3,7 +3,9 @@ package com.programmers.yogijogi.entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,8 +20,8 @@ class ReservationTest {
     void setReview() {
         // given
         Reservation reservation = Reservation.builder()
-                .checkIn(LocalDateTime.now())
-                .checkOut(LocalDateTime.now())
+                .checkIn(LocalDate.now())
+                .checkOut(LocalDate.now())
                 .build();
 
         Review review = Review.builder()
