@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -19,10 +19,10 @@ public class Reservation {
     private Long id;
 
     @Column(name = "check_in")
-    private LocalDateTime checkIn;
+    private LocalDate checkIn;
 
     @Column(name = "check_out")
-    private LocalDateTime checkOut;
+    private LocalDate checkOut;
 
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "id")
@@ -37,7 +37,7 @@ public class Reservation {
     private Review review;
 
     @Builder
-    public Reservation(Room room, User user, LocalDateTime checkIn, LocalDateTime checkOut, Review review) {
+    public Reservation(Room room, User user, LocalDate checkIn, LocalDate checkOut, Review review) {
         this.room = room;
         this.user = user;
         this.checkIn = checkIn;
