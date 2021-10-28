@@ -2,12 +2,14 @@ package com.programmers.yogijogi.controller;
 
 import com.programmers.yogijogi.common.S3Uploader;
 import com.programmers.yogijogi.entity.Image;
+import com.programmers.yogijogi.entity.dto.HotelCreateDto;
 import com.programmers.yogijogi.entity.dto.HotelDetailDto;
 import com.programmers.yogijogi.entity.dto.ImageResponseDto;
 import com.programmers.yogijogi.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,15 @@ public class HotelApiController {
     @GetMapping("/{id}")
     public ResponseEntity<HotelDetailDto> getOne(@PathVariable Long id) {
         return ResponseEntity.ok(hotelService.getOne(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Long> create(
+            @RequestBody HotelCreateDto hotelCreateDto
+            )
+    {
+        Long hotelId = hotelService.save(hotelCreateDto);
+        return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/images")

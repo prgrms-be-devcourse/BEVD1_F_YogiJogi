@@ -4,6 +4,7 @@ import com.programmers.yogijogi.converter.HotelConverter;
 import com.programmers.yogijogi.converter.ImageConverter;
 import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Image;
+import com.programmers.yogijogi.entity.dto.HotelCreateDto;
 import com.programmers.yogijogi.entity.dto.HotelDetailDto;
 import com.programmers.yogijogi.entity.dto.ImageResponseDto;
 import com.programmers.yogijogi.exception.NotFoundException;
@@ -51,5 +52,11 @@ public class HotelService {
     public Page<ImageResponseDto> getImageByHotelId(Long hotelId, Pageable pageable) {
         return imageRepository.findImageByHotelId(hotelId, pageable)
                 .map(image -> ImageConverter.of(image));
+    }
+
+    @Transactional
+    public Long save(HotelCreateDto hotelCreateDto) {
+        Hotel hotelEntity = hotelRepository.save(hotelCreateDto.toEntity());
+        return hotelEntity.getId();
     }
 }

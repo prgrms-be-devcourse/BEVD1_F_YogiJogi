@@ -1,27 +1,17 @@
 package com.programmers.yogijogi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.programmers.yogijogi.entity.*;
-import com.programmers.yogijogi.repository.HotelRepository;
+import com.programmers.yogijogi.entity.dto.HotelCreateDto;
 import com.programmers.yogijogi.service.HotelService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.File;
-import java.io.FileInputStream;
-
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,15 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
 class HotelApiControllerTest {
 
     @Value("${property.test.imageSource}")
     private String IMAGE_SOURCE;
-
-    @Autowired
-    HotelRepository hotelRepository;
 
     @Autowired
     HotelService hotelService;
@@ -49,21 +35,35 @@ class HotelApiControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    Hotel hotel;
-
     Long hotelId;
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
-        hotel = Hotel.builder()
+        HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
                 .name("testName")
-                .region(Region.Seocho)
                 .grade(5)
-                .theme(Theme.PC)
+                .region("Seocho")
+                .theme("pc")
                 .build();
 
-        hotel = hotelRepository.save(hotel);
-        hotelId = hotel.getId();
+        hotelId = hotelService.save(hotelCreateDto);
+    }
+
+    @Test
+    @DisplayName("호텔을 저장할 수 있어야한다.")
+    void create() throws Exception {
+        HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
+                .name("testName")
+                .grade(5)
+                .region("Seocho")
+                .theme("pc")
+                .build();
+
+        mockMvc.perform(post("/hotels")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(hotelCreateDto)))
+                .andExpect(status().isCreated())
+                .andDo(print());
     }
 
     @Test
