@@ -1,10 +1,14 @@
 package com.programmers.yogijogi.entity;
 
+import com.programmers.yogijogi.entity.dto.ReservationDto;
+import com.programmers.yogijogi.entity.dto.RoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -19,10 +23,10 @@ public class Reservation {
     private Long id;
 
     @Column(name = "check_in")
-    private LocalDateTime checkIn;
+    private LocalDate checkIn;
 
     @Column(name = "check_out")
-    private LocalDateTime checkOut;
+    private LocalDate checkOut;
 
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "id")
@@ -37,7 +41,8 @@ public class Reservation {
     private Review review;
 
     @Builder
-    public Reservation(Room room, User user, LocalDateTime checkIn, LocalDateTime checkOut, Review review) {
+    public Reservation(Long id, Room room, User user, LocalDate checkIn, LocalDate checkOut, Review review) {
+        this.id = id;
         this.room = room;
         this.user = user;
         this.checkIn = checkIn;
@@ -63,4 +68,5 @@ public class Reservation {
         this.review = review;
         review.setReservation(this);
     }
+    
 }

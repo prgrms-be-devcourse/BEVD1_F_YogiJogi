@@ -1,5 +1,7 @@
 package com.programmers.yogijogi.entity;
 
+import com.programmers.yogijogi.entity.dto.HotelDto;
+import com.programmers.yogijogi.entity.dto.RoomDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +25,17 @@ public class Hotel {
     @Column(name = "name")
     private String name;
 
+//    @Builder
+//    public Hotel(String name, Region region) {
+//        this.name = name;
+//        this.region = region;
+//    }
+
     @Builder
-    public Hotel(String name, Region region) {
+    public Hotel(Long id, String name, Host host) {
+        this.id = id;
         this.name = name;
-        this.region = region;
+        this.host = host;
     }
 
     @Column(name = "region")
@@ -48,7 +57,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel")
     private final List<Room> rooms = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "host_id", referencedColumnName = "id")
     private Host host;
 
@@ -68,4 +77,5 @@ public class Hotel {
         this.rooms.add(room);
         room.setHotel(this);
     }
+    
 }
