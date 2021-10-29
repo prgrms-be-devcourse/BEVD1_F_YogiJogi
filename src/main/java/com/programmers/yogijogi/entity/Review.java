@@ -30,7 +30,7 @@ public class Review {
     private Reservation reservation;
 
     // 연관관계
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
@@ -40,16 +40,5 @@ public class Review {
         this.rating = rating;
         this.reservation = reservation;
         this.hotel = hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        if(Objects.nonNull(this.hotel)) {
-            this.hotel.getReviews().remove(this);
-        }
-        this.hotel = hotel;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
     }
 }

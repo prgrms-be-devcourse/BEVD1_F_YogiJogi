@@ -1,10 +1,10 @@
 package com.programmers.yogijogi.controller;
 
 import com.programmers.yogijogi.common.S3Uploader;
-import com.programmers.yogijogi.entity.Image;
 import com.programmers.yogijogi.entity.dto.HotelCreateDto;
 import com.programmers.yogijogi.entity.dto.HotelDetailDto;
 import com.programmers.yogijogi.entity.dto.ImageResponseDto;
+import com.programmers.yogijogi.entity.dto.ReviewResponseDto;
 import com.programmers.yogijogi.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/hotels")
@@ -34,10 +36,7 @@ public class HotelApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> create(
-            @RequestBody HotelCreateDto hotelCreateDto
-            )
-    {
+    public ResponseEntity<Long> create(@Valid @RequestBody HotelCreateDto hotelCreateDto) {
         Long hotelId = hotelService.save(hotelCreateDto);
         return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
     }
@@ -58,5 +57,11 @@ public class HotelApiController {
             Pageable pageable)
     {
         return ResponseEntity.ok(hotelService.getImageByHotelId(id, pageable));
+    }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getTwoReviews(@PathVariable(value = "id") Long id) {
+        List<ReviewResponseDto> reviewResponseDtos = hotelService.getTwoReviewsByHotelId(id);
+        return ResponseEntity.ok(reviewResponseDtos);
     }
 }

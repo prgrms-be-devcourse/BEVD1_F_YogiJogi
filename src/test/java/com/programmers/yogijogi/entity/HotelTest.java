@@ -20,11 +20,13 @@ class HotelTest {
                 .build();
 
         Review review = Review.builder()
+                .hotel(hotel)
                 .content("testContent")
                 .rating(5)
                 .build();
 
         Review review2 = Review.builder()
+                .hotel(hotel)
                 .content("testContent")
                 .rating(5)
                 .build();

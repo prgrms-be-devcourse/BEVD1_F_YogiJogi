@@ -14,10 +14,9 @@ class RoomTest {
     @Test
     @DisplayName("Room - Reservation 의 연관관계 편의 메서드 테스트")
     void addReservation() {
-        Reservation reservation1 = Reservation.builder().build();
-        Reservation reservation2 = Reservation.builder().build();
-
         Room room = Room.builder().build();
+        Reservation reservation1 = Reservation.builder().room(room).build();
+        Reservation reservation2 = Reservation.builder().room(room).build();
 
         room.addReservation(reservation1);
         room.addReservation(reservation2);

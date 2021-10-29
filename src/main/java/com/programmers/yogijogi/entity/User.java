@@ -22,8 +22,8 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "user")
-    private List<Reservation> reservations = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @Builder
     public User(String name) {
@@ -32,6 +32,5 @@ public class User {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
-        reservation.setUser(this);
     }
 }

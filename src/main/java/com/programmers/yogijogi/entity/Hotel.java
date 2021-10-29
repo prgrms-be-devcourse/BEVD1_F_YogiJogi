@@ -51,7 +51,7 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel")
     private final List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private final List<Room> rooms = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -67,7 +67,6 @@ public class Hotel {
 
     public void addReview(Review review) {
         this.reviews.add(review);
-        review.setHotel(this);
     }
 
     public void addRoom(Room room){

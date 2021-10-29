@@ -33,7 +33,7 @@ public class Reservation {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "review_id", referencedColumnName = "id")
     private Review review;
 
@@ -46,22 +46,7 @@ public class Reservation {
         this.review = review;
     }
 
-    public void setRoom(Room room) {
-        if (Objects.nonNull(this.room)) {
-            this.room.getReservations().remove(this);
-        }
-        this.room = room;
-    }
-
-    public void setUser(User user) {
-        if (Objects.nonNull(this.user)) {
-            this.user.getReservations().remove(this);
-        }
-        this.user = user;
-    }
-
     public void setReview(Review review){
         this.review = review;
-        review.setReservation(this);
     }
 }

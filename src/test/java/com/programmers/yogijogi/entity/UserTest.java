@@ -16,8 +16,8 @@ class UserTest {
     void addReservation() {
         // given
         User user = User.builder().build();
-        Reservation reservation = Reservation.builder().build();
-        Reservation reservation2 = Reservation.builder().build();
+        Reservation reservation = Reservation.builder().user(user).build();
+        Reservation reservation2 = Reservation.builder().user(user).build();
         // when
         user.addReservation(reservation);
         user.addReservation(reservation2);

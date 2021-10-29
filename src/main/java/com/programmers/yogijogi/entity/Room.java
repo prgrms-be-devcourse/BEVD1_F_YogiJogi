@@ -19,11 +19,14 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "price")
     private int price;
 
     @OneToMany(mappedBy = "room")
-    private List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
@@ -37,8 +40,9 @@ public class Room {
     private int maxGuest;
 
     @Builder
-    public Room(int price, Hotel hotel) {
+    public Room(int price, String name, Hotel hotel) {
         this.price = price;
+        this.name = name;
         this.hotel = hotel;
     }
 
@@ -51,6 +55,5 @@ public class Room {
 
     public void addReservation(Reservation reservation){
         this.reservations.add(reservation);
-        reservation.setRoom(this);
     }
 }

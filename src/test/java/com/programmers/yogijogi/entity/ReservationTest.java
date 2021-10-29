@@ -26,6 +26,7 @@ class ReservationTest {
                 .build();
 
         Review review = Review.builder()
+                .reservation(reservation)
                 .content("testContent")
                 .rating(5)
                 .build();
