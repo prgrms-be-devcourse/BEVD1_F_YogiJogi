@@ -50,11 +50,10 @@ public class Room {
 //    }
 
     @Builder
-    public Room(Long id, String name, int price, List<Reservation> reservations, Hotel hotel, int stock, int maxGuest) {
+    public Room(Long id, String name, int price,  Hotel hotel, int stock, int maxGuest) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.reservations = reservations;
         this.hotel = hotel;
         this.stock = stock;
         this.maxGuest = maxGuest;
