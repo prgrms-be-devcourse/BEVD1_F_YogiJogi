@@ -44,6 +44,7 @@ public class Room {
         this.price = price;
         this.name = name;
         this.hotel = hotel;
+        hotel.addRoom(this);
     }
 
     public void setHotel(Hotel hotel){

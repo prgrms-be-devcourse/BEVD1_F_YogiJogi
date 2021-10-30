@@ -71,7 +71,6 @@ public class Hotel {
 
     public void addRoom(Room room){
         this.rooms.add(room);
-        room.setHotel(this);
     }
 
     public void addImage(Image image) {

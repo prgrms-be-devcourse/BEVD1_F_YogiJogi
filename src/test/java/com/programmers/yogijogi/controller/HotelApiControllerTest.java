@@ -119,6 +119,7 @@ class HotelApiControllerTest {
                 .build();
 
         Room room = Room.builder()
+                .hotel(hotel)
                 .name("testRoomName")
                 .price(3000)
                 .build();
@@ -144,12 +145,6 @@ class HotelApiControllerTest {
                 .checkOut(LocalDate.now())
                 .build();
 
-        room.addReservation(reservation1);
-        room.addReservation(reservation2);
-
-        user.addReservation(reservation1);
-        user.addReservation(reservation2);
-
         // 리뷰를 등록한다.
         Review review1 = Review.builder()
                 .hotel(hotel)
@@ -165,12 +160,6 @@ class HotelApiControllerTest {
                 .rating(5)
                 .build();
 
-        reservation1.setReview(review1);
-        reservation2.setReview(review2);
-
-        hotel.addReview(review1);
-        hotel.addReview(review2);
-
         // when
         hotelRepository.save(hotel);
         userRepository.save(user);
@@ -183,7 +172,7 @@ class HotelApiControllerTest {
 
     @Test
     @DisplayName("호텔 생성 요청 객체 파라미터 테스트")
-    void hotelCreateDtoParameterException() throws Exception {
+    void hotelCreateDtoParameterExceptionTest() throws Exception {
         // given : 호텔의 필수 필드인 Region을 생략함
         HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
                 .name("testName")

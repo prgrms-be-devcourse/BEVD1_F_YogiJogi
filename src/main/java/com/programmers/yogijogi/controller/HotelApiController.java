@@ -25,10 +25,10 @@ public class HotelApiController {
     public final String HOTEL_DIRNAME = "/hotels";
 
     @Autowired
-    HotelService hotelService;
+    private HotelService hotelService;
 
     @Autowired
-    S3Uploader s3Uploader;
+    private S3Uploader s3Uploader;
 
     @GetMapping("/{id}")
     public ResponseEntity<HotelDetailDto> getOne(@PathVariable Long id) {

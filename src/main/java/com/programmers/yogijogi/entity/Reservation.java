@@ -44,6 +44,8 @@ public class Reservation {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.review = review;
+        room.addReservation(this);
+        user.addReservation(this);
     }
 
     public void setReview(Review review){

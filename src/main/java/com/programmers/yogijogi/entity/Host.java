@@ -34,5 +34,4 @@ public class Host {
         this.hotels.add(hotel);
         hotel.setHost(this);
     }
-
 }

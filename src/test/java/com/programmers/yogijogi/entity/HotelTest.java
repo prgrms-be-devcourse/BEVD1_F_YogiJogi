@@ -15,25 +15,34 @@ class HotelTest {
     @DisplayName("Hotel - Review 연관관계 편의 메서드 테스트")
     void addReview() {
         // given
+        User user = User.builder().build();
+
         Hotel hotel = Hotel.builder()
                 .name("testHotel")
                 .build();
 
+        Room room = Room.builder()
+                .hotel(hotel)
+                .build();
+
+        Reservation reservation = Reservation.builder()
+                .user(user)
+                .room(room)
+                .build();
+
         Review review = Review.builder()
                 .hotel(hotel)
+                .reservation(reservation)
                 .content("testContent")
                 .rating(5)
                 .build();
 
         Review review2 = Review.builder()
+                .reservation(reservation)
                 .hotel(hotel)
                 .content("testContent")
                 .rating(5)
                 .build();
-
-        // when
-        hotel.addReview(review);
-        hotel.addReview(review2);
 
         // then
         assertThat(hotel.getReviews(), contains(review, review2));
@@ -50,16 +59,15 @@ class HotelTest {
                 .build();
 
         Room room = Room.builder()
+                .hotel(hotel)
                 .price(5000)
                 .build();
 
         Room room2 = Room.builder()
+                .hotel(hotel)
                 .price(5000)
                 .build();
-
         // when
-        hotel.addRoom(room);
-        hotel.addRoom(room2);
         // then
         assertThat(hotel.getRooms(), contains(room, room2));
         assertThat(room.getHotel(), is(hotel));

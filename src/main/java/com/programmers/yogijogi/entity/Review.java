@@ -40,5 +40,7 @@ public class Review {
         this.rating = rating;
         this.reservation = reservation;
         this.hotel = hotel;
+        hotel.addReview(this);
+        reservation.setReview(this);
     }
 }
