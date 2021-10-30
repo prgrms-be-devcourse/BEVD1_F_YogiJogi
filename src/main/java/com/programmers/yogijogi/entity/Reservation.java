@@ -9,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -68,5 +67,5 @@ public class Reservation {
         this.review = review;
         review.setReservation(this);
     }
-    
+
 }

@@ -1,28 +1,24 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    username: sa
-    password: sa
-    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
 #    username: sa
-#    password:
-#    url: jdbc:h2:~/order;DB_CLOSE_ON_EXIT=FALSE
+#    password: sa
+#    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
+    username: yongjin
+    password:
+    url: jdbc:h2:~/board;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
   jpa:
     show-sql: true
     open-in-view: false
     hibernate:
       ddl-auto: create
     properties:
-      hibernate:
-#        enable_lazy_load_no_trans: true
-        format_sql: true
+      hibernate.format_sql: true
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true
       path: /h2-console
-  profiles:
-    active: aws
 
 logging:
   level:
@@ -48,3 +44,7 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+property:
+  test:
+    imageSource: src/test/resources/images/test.jpg

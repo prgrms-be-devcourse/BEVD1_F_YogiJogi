@@ -2,6 +2,7 @@ package com.programmers.yogijogi.entity;
 
 import com.programmers.yogijogi.entity.dto.HotelDto;
 import com.programmers.yogijogi.entity.dto.RoomDto;
+import com.programmers.yogijogi.entity.dto.HotelDetailDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,17 +26,14 @@ public class Hotel {
     @Column(name = "name")
     private String name;
 
-//    @Builder
-//    public Hotel(String name, Region region) {
-//        this.name = name;
-//        this.region = region;
-//    }
-
     @Builder
-    public Hotel(Long id, String name, Host host) {
+    public Hotel(Long id, String name,Host host, Region region, int grade, Theme theme) {
         this.id = id;
         this.name = name;
         this.host = host;
+        this.region = region;
+        this.grade = grade;
+        this.theme = theme;
     }
 
     @Column(name = "region")
@@ -50,6 +48,9 @@ public class Hotel {
     @Column(name = "theme")
     @Enumerated(EnumType.STRING)
     private Theme theme;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    private final List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "hotel")
     private final List<Review> reviews = new ArrayList<>();
@@ -77,5 +78,10 @@ public class Hotel {
         this.rooms.add(room);
         room.setHotel(this);
     }
-    
+
+    public void addImage(Image image) {
+        this.images.add(image);
+        image.setHotel(this);
+    }
+
 }

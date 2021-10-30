@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 @Entity
 @Table(name = "room")
 @NoArgsConstructor
@@ -32,7 +31,7 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<Reservation> reservations = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY/*, cascade = CascadeType.ALL*/)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
@@ -42,12 +41,6 @@ public class Room {
     // 숙박 최대 인원
     @Column(name = "max_guest")
     private int maxGuest;
-
-//    @Builder
-//    public Room(int price, Hotel hotel) {
-//        this.price = price;
-//        this.hotel = hotel;
-//    }
 
     @Builder
     public Room(Long id, String name, int price,  Hotel hotel, int stock, int maxGuest) {
