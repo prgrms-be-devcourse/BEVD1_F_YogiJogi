@@ -102,31 +102,31 @@ class RoomServiceTest {
 
     }
 
-    @Test
-    @DisplayName("예약가능한 방이 없을 경우 예외를 던져야한다 ")
-    void notRooms() throws NotFoundException {
-        RoomDto findRoom = roomService.findOne(savedRoomId1);
-        RoomDto findRoom2 = roomService.findOne(savedRoomId2);
-        Reservation reservation1 = Reservation.builder()
-                .checkIn(LocalDate.now())
-                .checkOut(LocalDate.now().plusDays(3))
-                .room(roomConverter.convertRoom(findRoom))
-                .build();
-
-        Reservation reservation2 = Reservation.builder()
-                .checkIn(LocalDate.now())
-                .checkOut(LocalDate.now().plusDays(3))
-                .room(roomConverter.convertRoom(findRoom2))
-                .build();
-
-        reservationRepository.save(reservation1);
-        reservationRepository.save(reservation2);
-
-
-        LocalDate checkIn = LocalDate.now().plusDays(1);
-        LocalDate checkOut = LocalDate.now().plusDays(4);
-//        List<RoomDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
-        assertThrows(NotEnoughStockException.class, () -> roomService.findAllByDate2(savedHotelId, checkIn, checkOut));
-    }
+//    @Test
+//    @DisplayName("예약가능한 방이 없을 경우 예외를 던져야한다 ")
+//    void notRooms() throws NotFoundException {
+//        RoomDto findRoom = roomService.findOne(savedRoomId1);
+//        RoomDto findRoom2 = roomService.findOne(savedRoomId2);
+//        Reservation reservation1 = Reservation.builder()
+//                .checkIn(LocalDate.now())
+//                .checkOut(LocalDate.now().plusDays(3))
+//                .room(roomConverter.convertRoom(findRoom))
+//                .build();
+//
+//        Reservation reservation2 = Reservation.builder()
+//                .checkIn(LocalDate.now())
+//                .checkOut(LocalDate.now().plusDays(3))
+//                .room(roomConverter.convertRoom(findRoom2))
+//                .build();
+//
+//        reservationRepository.save(reservation1);
+//        reservationRepository.save(reservation2);
+//
+//
+//        LocalDate checkIn = LocalDate.now().plusDays(1);
+//        LocalDate checkOut = LocalDate.now().plusDays(4);
+////        List<RoomDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
+//        assertThrows(NotEnoughStockException.class, () -> roomService.findAllByDate2(savedHotelId, checkIn, checkOut));
+//    }
 
 }

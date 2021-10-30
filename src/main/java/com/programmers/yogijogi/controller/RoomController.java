@@ -38,7 +38,7 @@ public class RoomController {
 //        return ResponseEntity.ok(findRooms);
 //    }
 
-    @GetMapping("hotels/{hotelId}")
+    @GetMapping("hotels/{hotelId}/rooms")
     public ResponseEntity<List<RoomDto>> findAllRoom(@PathVariable("hotelId") Long id,
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) throws NotFoundException {

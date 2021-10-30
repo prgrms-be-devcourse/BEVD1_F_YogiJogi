@@ -102,7 +102,7 @@ class RoomControllerTest {
 
         reservationRepository.save(reservation1);
 
-        mockMvc.perform(get("/hotels/{hotelId}", hotelId)
+        mockMvc.perform(get("/hotels/{hotelId}/rooms", hotelId)
                   .param("startDate", String.valueOf(LocalDate.now().plusDays(1)))
                   .param("endDate", String.valueOf(LocalDate.now().plusDays(4)))
                         .contentType(MediaType.APPLICATION_JSON))
