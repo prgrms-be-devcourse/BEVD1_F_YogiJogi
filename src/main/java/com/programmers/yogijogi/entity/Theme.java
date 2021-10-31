@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum Theme {
-    PC
+    TERRACE, SPA, SWIMMING_POOL, BBQ, WITH_PET, PC
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.yogijogi.entity.*;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.service.HotelService;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.File;
 import java.io.FileInputStream;
+import org.springframework.util.MultiValueMap;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -57,7 +59,7 @@ class HotelApiControllerTest {
     void setUp() {
         hotel = Hotel.builder()
                 .name("testName")
-                .region(Region.Seocho)
+                .province(Province.Seoul1)
                 .grade(5)
                 .theme(Theme.PC)
                 .build();
@@ -96,5 +98,27 @@ class HotelApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    void getReservableHotelBy() throws Exception{
+        LocalDate checkInTime = LocalDate.now();
+        LocalDate checkOutTime = LocalDate.now().plusDays(7);
+
+        mockMvc.perform(get("/hotels", hotelId)
+                .queryParam("province", Province.Seoul1.toString())
+                .queryParam("checkIn", checkInTime.toString())
+                .queryParam("checkOut", checkOutTime.toString())
+                .queryParam("guestCnt", String.valueOf(2))
+                .queryParam("hotelGrade", String.valueOf(1))
+                .queryParam("themes", Theme.WITH_PET.toString())
+                .queryParam("themes", Theme.BBQ.toString())
+                .queryParam("themes", Theme.SPA.toString())
+                .queryParam("themes", Theme.SWIMMING_POOL.toString())
+                .queryParam("themes", Theme.TERRACE.toString())
+
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print());
     }
 }

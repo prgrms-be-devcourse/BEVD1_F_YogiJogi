@@ -1,5 +1,7 @@
 package com.programmers.yogijogi.entity;
 
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,5 +64,37 @@ class HotelTest {
         assertThat(hotel.getRooms(), contains(room, room2));
         assertThat(room.getHotel(), is(hotel));
         assertThat(room2.getHotel(), is(hotel));
+    }
+
+    private static final int TEST_GUEST_CNT = 1;
+    private static final LocalDate TEST_DATE_BASE = LocalDate.of(2020,1,1);
+
+    @Test
+    @DisplayName("Hotel - Room 연관관계 편의 메서드 테스트")
+    void addRooms() {
+        Hotel hotel = Hotel.builder().build()
+            .addRooms(
+                List.of(
+                    Room.builder().maxGuest(TEST_GUEST_CNT).build()
+                        .addReservations(List.of(
+                            Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                        )),
+                    Room.builder().maxGuest(TEST_GUEST_CNT).build()
+                        .addReservations(List.of(
+                            Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                        )),
+                    Room.builder().maxGuest(TEST_GUEST_CNT).build()
+                        .addReservations(List.of(
+                            Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                        ))
+                )
+            );
+
+        assertThat(hotel.getRooms().size(), is(3));
+        hotel.getRooms().forEach(
+            room -> {
+             assertThat(room.getHotel(), is(hotel));
+            }
+        );
     }
 }
