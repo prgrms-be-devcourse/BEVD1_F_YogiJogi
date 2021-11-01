@@ -6,7 +6,6 @@ import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.User;
 import com.programmers.yogijogi.entity.dto.RoomDto;
-import com.programmers.yogijogi.exception.NotEnoughStockException;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
@@ -160,7 +159,7 @@ class RoomServiceTest {
 
         LocalDate checkIn = LocalDate.now().plusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(4);
-        assertThrows(NotFoundException.class, () -> roomService.findOneByDate(savedRoomId1, checkIn, checkOut));
+        assertThrows(com.programmers.yogijogi.exception.NotFoundException.class, () -> roomService.findOneByDate(savedRoomId1, checkIn, checkOut));
 
     }
 

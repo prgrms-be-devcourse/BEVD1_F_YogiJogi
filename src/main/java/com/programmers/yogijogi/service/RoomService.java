@@ -5,11 +5,11 @@ import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.dto.RoomDto;
-import com.programmers.yogijogi.exception.NotEnoughStockException;
+import com.programmers.yogijogi.exception.NotFoundException;
+import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class RoomService {
     public RoomDto findOne(Long id) throws NotFoundException {
         return roomRepository.findById(id)
                 .map(roomConverter::convertRoomDto)
-                .orElseThrow(() -> new NotFoundException("룸을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
     }
 
     public List<RoomDto> findAllByHotelId(Long hotelId) {
@@ -86,7 +86,7 @@ public class RoomService {
                                                                      LocalDate checkOut) throws NotFoundException {
 
         Hotel findHotel = hotelRepository.getById(hotelId);
-        List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow(() -> new NotFoundException("룸을 찾을 수 없습니다."));
+        List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
 
         Predicate<Reservation> reservationPredicateCheckIn = reservation ->
                 (reservation.getCheckIn().isEqual(checkIn)
@@ -115,13 +115,13 @@ public class RoomService {
 
     @Transactional
     public RoomDto findOneByDate(Long roomId, LocalDate checkIn, LocalDate checkOut) throws NotFoundException {
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new NotFoundException("룸을 찾을 수 없습니다. "));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
         List<Reservation> reservations = reservationRepository.getAllByRoom(room);
 
         for (Reservation reservation : reservations) {
             if ((checkIn.isBefore(reservation.getCheckOut()) && checkIn.isAfter(reservation.getCheckIn())) ||
                     (checkOut.isBefore(reservation.getCheckOut()) && checkOut.isAfter(reservation.getCheckIn()))) {
-                throw new NotFoundException("이용가능한 객실이 없습니다. ");
+                throw new NotFoundException(ErrorMessage.NOT_USABLE_ROOM);
             }
         }
         return roomConverter.convertRoomDto(room);
