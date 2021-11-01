@@ -2,6 +2,8 @@ package com.programmers.yogijogi.entity;
 
 
 import com.programmers.yogijogi.entity.dto.RoomDto;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +64,7 @@ public class Room {
 
     public void addReservation(Reservation reservation){
         this.reservations.add(reservation);
+        reservation.setRoom(this);
     }
 
     public void minusRoomStock() {
@@ -70,4 +73,11 @@ public class Room {
     public void plusRoomStock() {
         this.stock = 1;
     }
+
+  public Room addReservations(List<Reservation> reservations) {
+    reservations.forEach(
+        this::addReservation
+    );
+    return this;
+  }
 }

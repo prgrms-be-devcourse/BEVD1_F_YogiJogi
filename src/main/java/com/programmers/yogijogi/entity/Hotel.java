@@ -1,5 +1,7 @@
 package com.programmers.yogijogi.entity;
 
+import java.util.HashSet;
+import java.util.Set;
 import com.programmers.yogijogi.entity.dto.HotelDto;
 import com.programmers.yogijogi.entity.dto.RoomDto;
 import com.programmers.yogijogi.entity.dto.HotelDetailDto;
@@ -27,18 +29,18 @@ public class Hotel {
     private String name;
 
     @Builder
-    public Hotel(Long id, String name,Host host, Region region, int grade, Theme theme) {
+    public Hotel(Long id, String name,Host host, Province province, int grade, Theme theme) {
         this.id = id;
         this.name = name;
         this.host = host;
-        this.region = region;
+        this.province = province;
         this.grade = grade;
         this.theme = theme;
     }
 
-    @Column(name = "region")
+    @Column(name = "province")
     @Enumerated(EnumType.STRING)
-    private Region region;
+    private Province province;
 
     // 성급
     @Column(name = "grade")
@@ -77,9 +79,15 @@ public class Hotel {
         this.rooms.add(room);
     }
 
-    public void addImage(Image image) {
-        this.images.add(image);
-        image.setHotel(this);
-    }
+  public Hotel addRooms(List<Room> rooms) {
+    rooms.forEach(
+        this::addRoom
+    );
+    return this;
+  }
 
+  public void addImage(Image image) {
+    this.images.add(image);
+    image.setHotel(this);
+  }
 }
