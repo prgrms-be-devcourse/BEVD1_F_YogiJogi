@@ -29,7 +29,7 @@ public class Room {
     private int price;
 
     @OneToMany(mappedBy = "room")
-    private List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
@@ -50,8 +50,8 @@ public class Room {
         this.hotel = hotel;
         this.stock = stock;
         this.maxGuest = maxGuest;
+        hotel.addRoom(this);
     }
-
 
     public void setHotel(Hotel hotel){
         if(Objects.nonNull(this.hotel)){
@@ -62,7 +62,6 @@ public class Room {
 
     public void addReservation(Reservation reservation){
         this.reservations.add(reservation);
-        reservation.setRoom(this);
     }
 
     public void minusRoomStock() {
@@ -71,6 +70,4 @@ public class Room {
     public void plusRoomStock() {
         this.stock = 1;
     }
-
-
 }

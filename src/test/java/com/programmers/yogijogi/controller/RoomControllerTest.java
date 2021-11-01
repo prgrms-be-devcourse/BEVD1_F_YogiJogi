@@ -5,10 +5,12 @@ import com.programmers.yogijogi.converter.RoomConverter;
 import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
+import com.programmers.yogijogi.entity.User;
 import com.programmers.yogijogi.entity.dto.RoomDto;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
+import com.programmers.yogijogi.repository.UserRepository;
 import com.programmers.yogijogi.service.RoomService;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,9 @@ class RoomControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private RoomRepository roomRepository;
@@ -87,19 +92,24 @@ class RoomControllerTest {
         hotelId = hotelRepository.save(hotel1).getId();
         savedRoomId1 = roomRepository.save(room1).getId();
         savedRoomId2 = roomRepository.save(room2).getId();
-
     }
 
     @Test
     void getRooms() throws Exception {
 
+        User user = User.builder()
+                .name("testUserName")
+                .build();
+
         RoomDto findRoom = roomService.findOne(savedRoomId1);
         Reservation reservation1 = Reservation.builder()
+                .user(user)
                 .checkIn(LocalDate.now())
                 .checkOut(LocalDate.now().plusDays(3))
                 .room(roomConverter.convertRoom(findRoom))
                 .build();
 
+        userRepository.save(user);
         reservationRepository.save(reservation1);
 
         mockMvc.perform(get("/hotels/{hotelId}/rooms", hotelId)

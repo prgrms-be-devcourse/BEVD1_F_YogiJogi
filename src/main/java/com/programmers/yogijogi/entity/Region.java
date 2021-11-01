@@ -2,7 +2,11 @@ package com.programmers.yogijogi.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.programmers.yogijogi.exception.NotFoundException;
+import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 @JsonFormat(shape = Shape.OBJECT)
 @RequiredArgsConstructor
@@ -39,4 +43,13 @@ public enum Region {
   // 한국어 이름
   public final String koreanName;
 
+  // 생성
+  public static Region of(String name) {
+    return Arrays.stream(values())
+            .filter(region -> name.equals(region.name()))
+            .findFirst()
+            .orElseThrow(() -> {
+              throw new NotFoundException(ErrorMessage.REGION_NOT_FOUND);
+            });
+  }
 }

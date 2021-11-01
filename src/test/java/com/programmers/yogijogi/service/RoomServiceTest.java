@@ -4,11 +4,13 @@ import com.programmers.yogijogi.converter.RoomConverter;
 import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
+import com.programmers.yogijogi.entity.User;
 import com.programmers.yogijogi.entity.dto.RoomDto;
 import com.programmers.yogijogi.exception.NotEnoughStockException;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
+import com.programmers.yogijogi.repository.UserRepository;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -34,6 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RoomServiceTest {
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
@@ -86,12 +90,19 @@ class RoomServiceTest {
     @Test
     void findAllByDate() throws NotFoundException {
         RoomDto findRoom = roomService.findOne(savedRoomId1);
+
+        User user = User.builder()
+                .name("testUserName")
+                .build();
+
         Reservation reservation1 = Reservation.builder()
+                .user(user)
                 .checkIn(LocalDate.now())
                 .checkOut(LocalDate.now().plusDays(3))
                 .room(roomConverter.convertRoom(findRoom))
                 .build();
 
+        userRepository.save(user);
         reservationRepository.save(reservation1);
 
         LocalDate checkIn = LocalDate.now().plusDays(1);
@@ -99,7 +110,6 @@ class RoomServiceTest {
         List<RoomDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
         Assertions.assertThat(rooms.get(0).getName()).isEqualTo("룸룸");
         Assertions.assertThat(rooms.size()).isEqualTo(1);
-
     }
 
 //    @Test

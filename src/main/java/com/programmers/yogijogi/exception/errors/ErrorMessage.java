@@ -8,6 +8,8 @@ import java.util.Arrays;
 public enum ErrorMessage {
     //COMMON
     HOTEL_NOT_FOUND("해당 호텔은 존재하지 않습니다."),
+    REGION_NOT_FOUND("해당 지역은 존재하지 않습니다."),
+    THEME_NOT_FOUND("해당 테마는 존재하지 않습니다."),
     INTERNAL_SERVER_ERROR("예상치 못한 서버 문제 입니다."),
     NOT_FILE_CONVERT("파일을 변환 할 수 없습니다.");
 
