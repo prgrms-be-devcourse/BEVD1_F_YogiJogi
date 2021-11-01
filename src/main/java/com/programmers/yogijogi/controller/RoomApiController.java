@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class RoomController {
+public class RoomApiController {
 
     private final RoomService roomService;
 

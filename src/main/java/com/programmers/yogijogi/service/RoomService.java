@@ -51,16 +51,16 @@ public class RoomService {
 
 
     @Transactional
-    public List<RoomDto> findAllByDate2(Long hotelId, LocalDate checkIn,LocalDate checkOut) throws NotFoundException {
+    public List<RoomDto> findAllByDate2(Long hotelId, LocalDate checkIn, LocalDate checkOut) throws NotFoundException {
         Hotel findHotel = hotelRepository.getById(hotelId);
         List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow(() -> new NotFoundException("룸을 찾을 수 없습니다."));
 
 
         for (Room room : rooms) {
             List<Reservation> reservations = reservationRepository.getAllByRoom(room);
-            for(Reservation reservation : reservations){
-                if((checkIn.isBefore(reservation.getCheckOut()) &&checkIn.isAfter(reservation.getCheckIn()) )||
-                        ( checkOut.isBefore(reservation.getCheckOut()) &&checkOut.isAfter(reservation.getCheckIn()))){
+            for (Reservation reservation : reservations) {
+                if ((checkIn.isBefore(reservation.getCheckOut()) && checkIn.isAfter(reservation.getCheckIn())) ||
+                        (checkOut.isBefore(reservation.getCheckOut()) && checkOut.isAfter(reservation.getCheckIn()))) {
                     reservation.getRoom().minusRoomStock();
                 }
             }

@@ -21,12 +21,16 @@ class RoomRepositoryTest {
   private static final String TEST_HOTEL_NAME = "some hotel name";
 
   @Autowired
+  HotelRepository hotelRepository;
+
+  @Autowired
   RoomRepository roomRepository;
 
   @Test
   @Transactional
   void findRoom() {
     //given
+    Hotel hotel = Hotel.builder().name(TEST_HOTEL_NAME).build();
     LocalDate date = LocalDate.now();
     Room room = Room.builder().maxGuest(1).build()
         .addReservations(
@@ -38,11 +42,11 @@ class RoomRepositoryTest {
                 Reservation.builder().checkIn(date).checkOut(date.plusDays(1)).build()
             )
         );
-    room.setHotel(Hotel.builder().name(TEST_HOTEL_NAME).build());
+    hotel.addRoom(room);
 
     //when
-    roomRepository.save(room);
-    roomRepository.flush();
+    hotelRepository.save(hotel);
+    hotelRepository.flush();
 
     //then
     List<Room> rooms1 = roomRepository.findReservableRoomHasMaxGuestCntUnder(1);
@@ -52,6 +56,4 @@ class RoomRepositoryTest {
     assertThat(rooms1.get(0).getHotel().getName(), equalTo(TEST_HOTEL_NAME));
     assertThat(rooms1.get(0).getReservations().size(), is(5));
   }
-
-
 }

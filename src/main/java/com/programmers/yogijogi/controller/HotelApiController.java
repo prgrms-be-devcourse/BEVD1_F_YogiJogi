@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/hotels")
@@ -51,15 +50,6 @@ public class HotelApiController {
     public ResponseEntity<Long> create(@Valid @RequestBody HotelCreateDto hotelCreateDto) {
         Long hotelId = hotelService.save(hotelCreateDto);
         return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/{id}/images")
-    public ResponseEntity<String> uploadHotelImage(
-            @RequestParam("images") MultipartFile multipartFile,
-            @PathVariable("id") Long hotelId) throws IOException {
-        String url = s3Uploader.upload(multipartFile, HOTEL_DIRNAME + "/" + hotelId);
-        hotelService.saveHotelImageUrl(hotelId, url);
-        return ResponseEntity.ok(url);
     }
 
     @PostMapping("/{id}/images")
@@ -102,12 +92,6 @@ public class HotelApiController {
             reservableHotelRequestDto.addCondition(hotelGrade);
         }
 
-        @GetMapping("/{id}/reviews")
-        public ResponseEntity<List<ReviewResponseDto>> getTwoReviews (@PathVariable(value = "id") Long id){
-            List<ReviewResponseDto> reviewResponseDtos = hotelService.getTwoReviewsByHotelId(id);
-            return ResponseEntity.ok(reviewResponseDtos);
-        }
-
         if (Objects.nonNull(themes)) {
             reservableHotelRequestDto.addCondition(themes);
         }
@@ -116,4 +100,11 @@ public class HotelApiController {
 
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getTwoReviews(@PathVariable(value = "id") Long id) {
+        List<ReviewResponseDto> reviewResponseDtos = hotelService.getTwoReviewsByHotelId(id);
+        return ResponseEntity.ok(reviewResponseDtos);
+    }
+
 }

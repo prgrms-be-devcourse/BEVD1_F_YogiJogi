@@ -2,8 +2,10 @@ package com.programmers.yogijogi.entity;
 
 
 import com.programmers.yogijogi.entity.dto.RoomDto;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,24 +47,23 @@ public class Room {
     private int maxGuest;
 
     @Builder
-    public Room(Long id, String name, int price,  Hotel hotel, int stock, int maxGuest) {
+    public Room(Long id, String name, int price, Hotel hotel, int stock, int maxGuest) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.hotel = hotel;
         this.stock = stock;
         this.maxGuest = maxGuest;
-        hotel.addRoom(this);
     }
 
-    public void setHotel(Hotel hotel){
-        if(Objects.nonNull(this.hotel)){
+    public void setHotel(Hotel hotel) {
+        if(Objects.nonNull(this.hotel)) {
             this.hotel.getRooms().remove(this);
         }
         this.hotel = hotel;
     }
 
-    public void addReservation(Reservation reservation){
+    public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
         reservation.setRoom(this);
     }
@@ -70,14 +71,15 @@ public class Room {
     public void minusRoomStock() {
         this.stock = 0;
     }
+
     public void plusRoomStock() {
         this.stock = 1;
     }
 
-  public Room addReservations(List<Reservation> reservations) {
-    reservations.forEach(
-        this::addReservation
-    );
-    return this;
-  }
+    public Room addReservations(List<Reservation> reservations) {
+        reservations.forEach(
+                this::addReservation
+        );
+        return this;
+    }
 }

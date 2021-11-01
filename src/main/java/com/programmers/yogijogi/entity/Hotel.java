@@ -2,6 +2,7 @@ package com.programmers.yogijogi.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import com.programmers.yogijogi.entity.dto.HotelDto;
 import com.programmers.yogijogi.entity.dto.RoomDto;
 import com.programmers.yogijogi.entity.dto.HotelDetailDto;
@@ -29,7 +30,7 @@ public class Hotel {
     private String name;
 
     @Builder
-    public Hotel(Long id, String name,Host host, Province province, int grade, Theme theme) {
+    public Hotel(Long id, String name, Host host, Province province, int grade, Theme theme) {
         this.id = id;
         this.name = name;
         this.host = host;
@@ -65,7 +66,7 @@ public class Hotel {
     private Host host;
 
     void setHost(Host host) {
-        if(Objects.nonNull(this.host)){
+        if (Objects.nonNull(this.host)) {
             this.host.getHotels().remove(this);
         }
         this.host = host;
@@ -73,21 +74,30 @@ public class Hotel {
 
     public void addReview(Review review) {
         this.reviews.add(review);
+        review.setHotel(this);
     }
 
-    public void addRoom(Room room){
+    public void addRoom(Room room) {
         this.rooms.add(room);
+        room.setHotel(this);
     }
 
-  public Hotel addRooms(List<Room> rooms) {
-    rooms.forEach(
-        this::addRoom
-    );
-    return this;
-  }
+    public Hotel addRooms(List<Room> rooms) {
+        rooms.forEach(
+                this::addRoom
+        );
+        return this;
+    }
 
-  public void addImage(Image image) {
-    this.images.add(image);
-    image.setHotel(this);
-  }
+    public void addImage(Image image) {
+        this.images.add(image);
+        image.setHotel(this);
+    }
+
+    public Hotel addReviews(List<Review> reviews) {
+        reviews.forEach(
+                this::addReview
+        );
+        return this;
+    }
 }

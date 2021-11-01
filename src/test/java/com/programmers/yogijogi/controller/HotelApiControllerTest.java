@@ -61,8 +61,8 @@ class HotelApiControllerTest {
         HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
                 .name("testName")
                 .grade(5)
-                .region("Seocho")
-                .theme("pc")
+                .province(Province.Seoul1.toString())
+                .theme(Theme.PC.toString())
                 .build();
 
         hotelId = hotelService.save(hotelCreateDto);
@@ -174,9 +174,6 @@ class HotelApiControllerTest {
 
         mockMvc.perform(get("/hotels/{id}/reviews", hotel.getId())
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

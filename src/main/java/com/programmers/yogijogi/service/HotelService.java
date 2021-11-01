@@ -22,14 +22,9 @@ import com.programmers.yogijogi.repository.RoomRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -89,13 +82,6 @@ public class HotelService {
                 .collect(Collectors.toList());
 
         return dto;
-    }
-
-    // 호텔 id에 맞는 이미지를 가져온다.
-    @Transactional
-    public Page<ImageResponseDto> getImageByHotelId(Long hotelId, Pageable pageable) {
-        return imageRepository.findImageByHotelId(hotelId, pageable)
-                .map(image -> ImageConverter.of(image));
     }
 
     // 호텔을 저장한다.

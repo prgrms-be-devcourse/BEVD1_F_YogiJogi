@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -17,31 +18,19 @@ class RoomTest {
     @DisplayName("Room - Reservation 의 연관관계 편의 메서드 테스트")
     void addReservation() {
         // given
-        User user = User.builder().build();
-
-        Hotel hotel = Hotel.builder()
-                .name("testHotel")
-                .build();
-
-        Room room = Room.builder()
-                .name("testRoom")
-                .hotel(hotel)
-                .build();
+        Room room = Room.builder().name("testRoom").build();
 
         Reservation reservation1 = Reservation.builder()
-                .user(user)
-                .room(room)
                 .checkIn(LocalDate.now())
                 .checkOut(LocalDate.now().plusDays(3))
                 .build();
 
         Reservation reservation2= Reservation.builder()
-                .user(user)
-                .room(room)
                 .checkIn(LocalDate.now())
                 .checkOut(LocalDate.now().plusDays(3))
                 .build();
 
+        room.addReservations(List.of(reservation1, reservation2));
         // then
         assertThat(room.getReservations(), contains(reservation1, reservation2));
         assertThat(reservation1.getRoom(), is(room));

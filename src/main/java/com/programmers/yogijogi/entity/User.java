@@ -32,5 +32,14 @@ public class User {
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
+        reservation.setUser(this);
+    }
+
+    public User addReservations(List<Reservation> reservations) {
+        reservations.forEach(
+                this::addReservation
+        );
+
+        return this;
     }
 }
