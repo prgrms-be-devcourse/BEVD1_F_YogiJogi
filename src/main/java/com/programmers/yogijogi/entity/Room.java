@@ -1,8 +1,11 @@
 package com.programmers.yogijogi.entity;
 
+
+import com.programmers.yogijogi.entity.dto.RoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
@@ -40,10 +43,13 @@ public class Room {
     private int maxGuest;
 
     @Builder
-    public Room(int price, String name, Hotel hotel) {
-        this.price = price;
+    public Room(Long id, String name, int price,  Hotel hotel, int stock, int maxGuest) {
+        this.id = id;
         this.name = name;
+        this.price = price;
         this.hotel = hotel;
+        this.stock = stock;
+        this.maxGuest = maxGuest;
         hotel.addRoom(this);
     }
 
@@ -56,5 +62,12 @@ public class Room {
 
     public void addReservation(Reservation reservation){
         this.reservations.add(reservation);
+    }
+
+    public void minusRoomStock() {
+        this.stock = 0;
+    }
+    public void plusRoomStock() {
+        this.stock = 1;
     }
 }
