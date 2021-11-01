@@ -120,4 +120,30 @@ class RoomControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    void findOneRoom() throws Exception {
+        RoomDto findRoom = roomService.findOne(savedRoomId1);
+
+        User user = User.builder()
+                .name("testUserName")
+                .build();
+
+        Reservation reservation1 = Reservation.builder()
+                .user(user)
+                .checkIn(LocalDate.now().plusDays(10))
+                .checkOut(LocalDate.now().plusDays(13))
+                .room(roomConverter.convertRoom(findRoom))
+                .build();
+
+        userRepository.save(user);
+        reservationRepository.save(reservation1);
+
+        mockMvc.perform(get("/hotels/{hotelId}/{roomId}",hotelId,savedRoomId1)
+                        .param("startDate", String.valueOf(LocalDate.now().plusDays(1)))
+                        .param("endDate", String.valueOf(LocalDate.now().plusDays(4)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
 }
