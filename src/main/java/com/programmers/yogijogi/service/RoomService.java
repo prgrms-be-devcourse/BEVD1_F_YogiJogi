@@ -51,66 +51,35 @@ public class RoomService {
     }
 
 
-//    @Transactional
-//    public List<RoomDto> findAllByDate2(Long hotelId, LocalDate checkIn,LocalDate checkOut) throws NotFoundException {
-//        Hotel findHotel = hotelRepository.getById(hotelId);
-//        List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow(() -> new NotFoundException("룸을 찾을 수 없습니다."));
-//
-//
-//        for (Room room : rooms) {
-//            List<Reservation> reservations = reservationRepository.getAllByRoom(room);
-//            for(Reservation reservation : reservations){
-//                if((checkIn.isBefore(reservation.getCheckOut()) &&checkIn.isAfter(reservation.getCheckIn()) )||
-//                        ( checkOut.isBefore(reservation.getCheckOut()) &&checkOut.isAfter(reservation.getCheckIn()))){
-//                    reservation.getRoom().minusRoomStock();
-//                    log.info("필터링되는 룸은 뭐니 ?? ::{}",reservation.getRoom().getId());
-//                }
-//            }
-//        }
-//        List<Room> result = roomRepository.getBYStock();
-//        for (Room r : result) {
-//            log.info("결과 룸은 뭐니 ?? ::{}",.getId());
-//        }
-//
-//        if (result.isEmpty()) {
-//            throw new NotEnoughStockException("사용 가능한 룸이 없습니다.");
-//        }
-//        return result.stream().map(roomConverter::convertRoomDto).collect(toList());
-//
-////        List<Room> result = roomRepository.findBYStock().orElseThrow(() -> new NotFoundException("예약 가능한 객실이 없습니다."));
-////        return result.stream().map(roomConverter::convertRoomDto).collect(toList());
-//    }
-
     @Transactional
-    public List<RoomDto> filterReservableRoomsWithCheckInAndCheckOut(Long hotelId, LocalDate checkIn,
-                                                                     LocalDate checkOut) throws NotFoundException {
-
+    public List<RoomDto> findAllByDate2(Long hotelId, LocalDate checkIn,LocalDate checkOut) throws NotFoundException {
         Hotel findHotel = hotelRepository.getById(hotelId);
         List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
 
-        Predicate<Reservation> reservationPredicateCheckIn = reservation ->
-                (reservation.getCheckIn().isEqual(checkIn)
-                        || reservation.getCheckIn().isAfter(checkIn))
-                        && (reservation.getCheckIn().isEqual(checkOut)
-                        || reservation.getCheckIn().isBefore(checkOut));
 
-        Predicate<Reservation> reservationPredicateCheckOut = reservation ->
-                (reservation.getCheckOut().isEqual(checkIn)
-                        || reservation.getCheckOut().isAfter(checkIn))
-                        && (reservation.getCheckOut().isEqual(checkOut)
-                        || reservation.getCheckOut().isBefore(checkOut));
-
-        return rooms.stream().filter(
-                room -> {
-                    long reservationsCnt = room.getReservations().stream()
-                            .filter(reservationPredicateCheckIn.or(reservationPredicateCheckOut))
-                            .count();
-
-                    log.info("reservationsCnt -> {}", reservationsCnt);
-
-                    return reservationsCnt == 0;
+        for (Room room : rooms) {
+            List<Reservation> reservations = reservationRepository.getAllByRoom(room);
+            for(Reservation reservation : reservations){
+                if((checkIn.isBefore(reservation.getCheckOut()) &&checkIn.isAfter(reservation.getCheckIn()) )||
+                        ( checkOut.isBefore(reservation.getCheckOut()) &&checkOut.isAfter(reservation.getCheckIn()))){
+                    reservation.getRoom().minusRoomStock();
+                    roomRepository.save( reservation.getRoom());
+                    log.info("필터링되는 룸은 뭐니 ?? ::{}",reservation.getRoom().getId());
                 }
-        ).map(roomConverter::convertRoomDto).collect(toList());
+            }
+        }
+        List<Room> result = roomRepository.getBYStock();
+        for (Room r : result) {
+            log.info("결과 룸은 뭐니 ?? ::{}",r.getId());
+        }
+
+        if (result.isEmpty()) {
+            throw new NotFoundException(ErrorMessage.NOT_USABLE_ROOM);
+        }
+        return result.stream().map(roomConverter::convertRoomDto).collect(toList());
+
+//        List<Room> result = roomRepository.findBYStock().orElseThrow(() -> new NotFoundException("예약 가능한 객실이 없습니다."));
+//        return result.stream().map(roomConverter::convertRoomDto).collect(toList());
     }
 
     @Transactional

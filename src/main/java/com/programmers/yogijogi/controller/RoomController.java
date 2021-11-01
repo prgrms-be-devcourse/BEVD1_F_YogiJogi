@@ -26,7 +26,7 @@ public class RoomController {
     public ResponseEntity<List<RoomDto>> findAllRoom(@PathVariable("hotelId") Long id,
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) throws NotFoundException {
-        List<RoomDto> findRooms = roomService.filterReservableRoomsWithCheckInAndCheckOut(id, startDate, endDate);
+        List<RoomDto> findRooms = roomService.findAllByDate2(id, startDate, endDate);
         return ResponseEntity.ok(findRooms);
     }
 

@@ -86,57 +86,39 @@ class RoomServiceTest {
 
     }
 
-    @Test
-    @DisplayName("호텔아이디로 날짜를 통해 사용가능한 룸을 조회할수 있어야한다. ")
-    void findAllByDate() throws NotFoundException {
-        RoomDto findRoom = roomService.findOne(savedRoomId1);
 
+    @Test
+    @DisplayName("예약가능한 방이 없을 경우 예외를 던져야한다 ")
+    void notRooms() throws NotFoundException {
+        RoomDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDto findRoom2 = roomService.findOne(savedRoomId2);
         User user = User.builder()
                 .name("testUserName")
                 .build();
-
         Reservation reservation1 = Reservation.builder()
                 .user(user)
-                .checkIn(TEST_DATE_BASE)
-                .checkOut(TEST_DATE_BASE.plusDays(1))
+                .checkIn(LocalDate.now())
+                .checkOut(LocalDate.now().plusDays(3))
                 .room(roomConverter.convertRoom(findRoom))
+                .build();
+
+        Reservation reservation2 = Reservation.builder()
+                .user(user)
+                .checkIn(LocalDate.now())
+                .checkOut(LocalDate.now().plusDays(3))
+                .room(roomConverter.convertRoom(findRoom2))
                 .build();
 
         userRepository.save(user);
         reservationRepository.save(reservation1);
+        reservationRepository.save(reservation2);
 
-        LocalDate checkIn = LocalDate.now();
-        LocalDate checkOut = LocalDate.now().plusDays(1);
-        List<RoomDto> rooms = roomService.filterReservableRoomsWithCheckInAndCheckOut(savedHotelId, checkIn, checkOut);
-        Assertions.assertThat(rooms.size()).isEqualTo(1);
+
+        LocalDate checkIn = LocalDate.now().plusDays(1);
+        LocalDate checkOut = LocalDate.now().plusDays(4);
+//        List<RoomDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
+        assertThrows(com.programmers.yogijogi.exception.NotFoundException.class, () -> roomService.findAllByDate2(savedHotelId, checkIn, checkOut));
     }
-
-//    @Test
-//    @DisplayName("예약가능한 방이 없을 경우 예외를 던져야한다 ")
-//    void notRooms() throws NotFoundException {
-//        RoomDto findRoom = roomService.findOne(savedRoomId1);
-//        RoomDto findRoom2 = roomService.findOne(savedRoomId2);
-//        Reservation reservation1 = Reservation.builder()
-//                .checkIn(LocalDate.now())
-//                .checkOut(LocalDate.now().plusDays(3))
-//                .room(roomConverter.convertRoom(findRoom))
-//                .build();
-//
-//        Reservation reservation2 = Reservation.builder()
-//                .checkIn(LocalDate.now())
-//                .checkOut(LocalDate.now().plusDays(3))
-//                .room(roomConverter.convertRoom(findRoom2))
-//                .build();
-//
-//        reservationRepository.save(reservation1);
-//        reservationRepository.save(reservation2);
-//
-//
-//        LocalDate checkIn = LocalDate.now().plusDays(1);
-//        LocalDate checkOut = LocalDate.now().plusDays(4);
-////        List<RoomDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
-//        assertThrows(NotEnoughStockException.class, () -> roomService.findAllByDate2(savedHotelId, checkIn, checkOut));
-//    }
 
     @Test
     @DisplayName("해당 날짜에 예약이 되어있을 경우 예외를 던져준다. ")
@@ -164,7 +146,7 @@ class RoomServiceTest {
     }
 
     @Test
-    @DisplayName("해당 날짜에 예약이 되어있을 경우 예외를 던져준다. ")
+    @DisplayName("해당 날짜에 예약이 가능할 경우 객실 상세 조회를 해준다 ")
     void findOneByDate2() throws NotFoundException {
         RoomDto findRoom = roomService.findOne(savedRoomId1);
 
@@ -187,6 +169,32 @@ class RoomServiceTest {
         RoomDto room = roomService.findOneByDate(savedRoomId1, checkIn, checkOut);
         Assertions.assertThat(room.getId()).isEqualTo(savedRoomId1);
 
+
+    }
+
+    @Test
+    @DisplayName("날짜를 통해 이용가능한 룸들 조회 ")
+    void findAllByDate2() throws NotFoundException {
+        RoomDto findRoom = roomService.findOne(savedRoomId1);
+        User user = User.builder()
+                .name("testUserName")
+                .build();
+
+        Reservation reservation1 = Reservation.builder()
+                .user(user)
+                .checkIn(LocalDate.now())
+                .checkOut(LocalDate.now().plusDays(3))
+                .room(roomConverter.convertRoom(findRoom))
+                .build();
+
+        userRepository.save(user);
+        reservationRepository.save(reservation1);
+
+        LocalDate checkIn = LocalDate.now().plusDays(1);
+        LocalDate checkOut = LocalDate.now().plusDays(4);
+        List<RoomDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
+        Assertions.assertThat(rooms.get(0).getName()).isEqualTo("룸룸");
+        Assertions.assertThat(rooms.size()).isEqualTo(1);
 
     }
 
