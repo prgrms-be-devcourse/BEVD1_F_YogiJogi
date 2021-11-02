@@ -22,27 +22,20 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    //날짜 정보 쿼리 스트링으로 받아오는 방법
-//    @GetMapping("hotels/{hotel-id}/{room-id}")
-//    public BaseResponse<?> findAllByIdAndRegDateBetween(@RequestParam @DateTimeFormat(pattern = "yyy-MM-dd")LocalDate startDate,
-//                                                        @RequestParam @DateTimeFormat(pattern = "yyy-MM-dd")LocalDate endDate){
-//
-//    }
-
-//    @GetMapping("hotels/{hotelId}")
-//    public ResponseEntity<List<RoomDto>> findAllRoom(@PathVariable("hotelId") Long id) {
-//        log.info("id :: {}", id);
-//        List<RoomDto> findRooms = roomService.findAllByHotelId(id);
-////        findRooms.forEach(room -> log.info("room result :: {}", room.getHotel()));
-////        result.forEach(roomDto -> log.info("result :: {} ", roomDto.getName()));
-//        return ResponseEntity.ok(findRooms);
-//    }
-
     @GetMapping("hotels/{hotelId}/rooms")
     public ResponseEntity<List<RoomDto>> findAllRoom(@PathVariable("hotelId") Long id,
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) throws NotFoundException {
         List<RoomDto> findRooms = roomService.findAllByDate2(id, startDate, endDate);
         return ResponseEntity.ok(findRooms);
+    }
+
+    @GetMapping("hotels/{hotelId}/{roomId}")
+    public ResponseEntity<RoomDto> findOneRoom(@PathVariable("hotelId") Long hotelId,
+                                               @PathVariable("roomId") Long roomId,
+                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate) throws NotFoundException {
+        RoomDto findRoom = roomService.findOneByDate(roomId, startDate, endDate);
+        return ResponseEntity.ok(findRoom);
     }
 }
