@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest
-class RoomControllerTest {
+class RoomApiControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -67,7 +67,7 @@ class RoomControllerTest {
     Long savedRoomId2;
 
     @BeforeEach
-    void save_test() throws NotFoundException {
+    void save_test() {
 
         Hotel hotel1 = Hotel.builder()
                 .name("신라스테이")

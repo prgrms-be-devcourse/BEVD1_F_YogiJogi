@@ -40,7 +40,19 @@ public class Review {
         this.rating = rating;
         this.reservation = reservation;
         this.hotel = hotel;
-        hotel.addReview(this);
-        reservation.setReview(this);
+    }
+
+    public void setHotel(Hotel hotel) {
+        if (Objects.nonNull(this.hotel)) {
+            this.hotel.getReviews().remove(this);
+        }
+        this.hotel = hotel;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+        if(Objects.nonNull(reservation.getRoom())) {
+            this.setHotel(reservation.getRoom().getHotel());
+        }
     }
 }

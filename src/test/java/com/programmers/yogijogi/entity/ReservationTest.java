@@ -20,29 +20,11 @@ class ReservationTest {
     @DisplayName("Reservation - Review 의 연관관계 편의 메서드 테스트")
     void setReview() {
         // given
-        User user = User.builder().build();
+        Reservation reservation = Reservation.builder().build();
+        Review review = Review.builder().build();
 
-        Hotel hotel = Hotel.builder()
-                .name("testHotel")
-                .build();
-
-        Room room = Room.builder()
-                .hotel(hotel)
-                .build();
-
-        Reservation reservation = Reservation.builder()
-                .user(user)
-                .room(room)
-                .checkIn(LocalDate.now())
-                .checkOut(LocalDate.now())
-                .build();
-
-        Review review = Review.builder()
-                .hotel(hotel)
-                .reservation(reservation)
-                .content("testContent")
-                .rating(5)
-                .build();
+        // when
+        reservation.setReview(review);
 
         // then
         assertThat(review.getReservation(), is(reservation));

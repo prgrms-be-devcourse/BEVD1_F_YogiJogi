@@ -9,6 +9,11 @@ import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.UserRepository;
 import com.programmers.yogijogi.service.HotelService;
 import org.junit.jupiter.api.*;
+import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +23,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.io.File;
+import java.io.FileInputStream;
+import org.springframework.util.MultiValueMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,8 +61,8 @@ class HotelApiControllerTest {
         HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
                 .name("testName")
                 .grade(5)
-                .region("Seocho")
-                .theme("pc")
+                .province(Province.Seoul1.toString())
+                .theme(Theme.PC.toString())
                 .build();
 
         hotelId = hotelService.save(hotelCreateDto);
@@ -65,9 +73,9 @@ class HotelApiControllerTest {
     void create() throws Exception {
         HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
                 .name("testName")
+                .province(Province.Seoul1.toString())
                 .grade(5)
-                .region("Seocho")
-                .theme("pc")
+                .theme(Theme.PC.toString())
                 .build();
 
         mockMvc.perform(post("/hotels")
@@ -168,6 +176,28 @@ class HotelApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    void getReservableHotelBy() throws Exception{
+        LocalDate checkInTime = LocalDate.now();
+        LocalDate checkOutTime = LocalDate.now().plusDays(7);
+
+        mockMvc.perform(get("/hotels", hotelId)
+                .queryParam("province", Province.Seoul1.toString())
+                .queryParam("checkIn", checkInTime.toString())
+                .queryParam("checkOut", checkOutTime.toString())
+                .queryParam("guestCnt", String.valueOf(2))
+                .queryParam("hotelGrade", String.valueOf(1))
+                .queryParam("themes", Theme.WITH_PET.toString())
+                .queryParam("themes", Theme.BBQ.toString())
+                .queryParam("themes", Theme.SPA.toString())
+                .queryParam("themes", Theme.SWIMMING_POOL.toString())
+                .queryParam("themes", Theme.TERRACE.toString())
+
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print());
     }
 
     @Test

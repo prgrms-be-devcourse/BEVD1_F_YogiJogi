@@ -13,17 +13,10 @@ class HostTest {
     @Test
     @DisplayName("host_hotel 연관관계 편의 메소드 확인")
     void addHotel() {
-        Host host = Host.builder()
-                .name("testName")
-                .build();
+        Host host = Host.builder().name("testName").build();
 
-        Hotel hotel = Hotel.builder()
-                .name("testHotel1")
-                .build();
-
-        Hotel hotel2 = Hotel.builder()
-                .name("testHotel2")
-                .build();
+        Hotel hotel = Hotel.builder().name("testHotel1").build();
+        Hotel hotel2 = Hotel.builder().name("testHotel2").build();
 
         host.addHotel(hotel);
         host.addHotel(hotel2);

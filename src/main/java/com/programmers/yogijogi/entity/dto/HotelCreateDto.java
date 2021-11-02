@@ -1,6 +1,7 @@
 package com.programmers.yogijogi.entity.dto;
 
 import com.programmers.yogijogi.entity.Hotel;
+import com.programmers.yogijogi.entity.Province;
 import com.programmers.yogijogi.entity.Region;
 import com.programmers.yogijogi.entity.Theme;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.Locale;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,7 +22,7 @@ public class HotelCreateDto {
     private String name;
 
     @NotBlank
-    private String region;
+    private String province;
 
     @NotNull
     @PositiveOrZero
@@ -30,9 +32,9 @@ public class HotelCreateDto {
     private String theme;
 
     @Builder
-    public HotelCreateDto(String name, String region, int grade, String theme) {
+    public HotelCreateDto(String name, String province, int grade, String theme) {
         this.name = name;
-        this.region = region;
+        this.province = province;
         this.grade = grade;
         this.theme = theme;
     }
@@ -40,8 +42,8 @@ public class HotelCreateDto {
     public Hotel toEntity() {
         return Hotel.builder()
                 .name(this.getName())
-                .region(Region.of(this.getRegion()))
-                .theme(Theme.of(this.getTheme()))
+                .province(Province.valueOf(this.getProvince()))
+                .theme(Theme.valueOf(this.getTheme()))
                 .grade(this.getGrade())
                 .build();
     }

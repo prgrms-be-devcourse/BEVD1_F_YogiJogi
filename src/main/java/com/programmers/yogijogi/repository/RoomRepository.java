@@ -20,4 +20,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> getBYStock();
 
 
+    @Query("SELECT DISTINCT room "
+            + "FROM Room room LEFT JOIN FETCH room.reservations "
+            + "JOIN FETCH room.hotel WHERE room.maxGuest <= :guestCnt")
+        //guestCnt 이하의 최대 투숙 인원을 가진 방의 정보를 모두 가져온다.
+    List<Room> findReservableRoomHasMaxGuestCntUnder(int guestCnt);
 }
