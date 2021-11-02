@@ -1,17 +1,15 @@
 package com.programmers.yogijogi.entity.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ReservationDto {
-    private Long id;
+public class HotelDetailRequestDto {
     private LocalDate checkIn;
     private LocalDate checkOut;
-    private RoomDetailDto roomdto;
-
 }

@@ -1,15 +1,10 @@
 package com.programmers.yogijogi.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.programmers.yogijogi.entity.dto.HotelDto;
-import com.programmers.yogijogi.entity.dto.RoomDto;
-import com.programmers.yogijogi.entity.dto.HotelDetailDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

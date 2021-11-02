@@ -1,11 +1,8 @@
 package com.programmers.yogijogi.entity;
 
-import com.programmers.yogijogi.entity.dto.ReservationDto;
-import com.programmers.yogijogi.entity.dto.RoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -49,9 +46,10 @@ public class Reservation {
         this.review = review;
     }
 
-    public void setReview(Review review){
+    public Reservation setReview(Review review){
         this.review = review;
         review.setReservation(this);
+        return this;
     }
 
     public void setRoom(Room room) {

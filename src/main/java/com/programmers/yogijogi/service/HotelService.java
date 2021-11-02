@@ -3,16 +3,12 @@ package com.programmers.yogijogi.service;
 import com.programmers.yogijogi.converter.HotelConverter;
 import com.programmers.yogijogi.converter.ImageConverter;
 import com.programmers.yogijogi.converter.ReviewConverter;
+import com.programmers.yogijogi.converter.RoomConverter;
 import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Image;
-import com.programmers.yogijogi.entity.dto.HotelCreateDto;
+import com.programmers.yogijogi.entity.dto.*;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
-import com.programmers.yogijogi.entity.dto.HotelDetailDto;
-import com.programmers.yogijogi.entity.dto.ImageResponseDto;
-import com.programmers.yogijogi.entity.dto.ReviewResponseDto;
-import com.programmers.yogijogi.entity.dto.ReservableHotelRequestDto;
-import com.programmers.yogijogi.entity.dto.ReservableHotelResponseDto;
 import com.programmers.yogijogi.exception.NotFoundException;
 import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import com.programmers.yogijogi.repository.HotelRepository;
@@ -21,7 +17,6 @@ import com.programmers.yogijogi.repository.ReviewRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -41,12 +36,12 @@ public class HotelService {
 
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
-    private final ImageRepository imageRepository;
     private final ReviewRepository reviewRepository;
+    private final ImageRepository imageRepository;
 
     // 하나의 호텔을 조회한다.
     @Transactional
-    public HotelDetailDto getOne(Long id) {
+    public HotelDetailResponseDto getOne(Long id) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new NotFoundException(ErrorMessage.HOTEL_NOT_FOUND);
@@ -120,8 +115,10 @@ public class HotelService {
 
     }
 
+    @Transactional
     public List<Room> filterReservableRoomsWithCheckInAndCheckOut(List<Room> rooms, LocalDate checkIn,
                                                                   LocalDate checkOut) {
+
         Predicate<Reservation> reservationPredicateCheckIn = reservation ->
                 (reservation.getCheckIn().isEqual(checkIn)
                         || reservation.getCheckIn().isAfter(checkIn))
@@ -145,5 +142,18 @@ public class HotelService {
                     return reservationsCnt == 0;
                 }
         ).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ReservableRoomResponseDto> getReservableRooms(Long id, LocalDate checkIn, LocalDate checkOut) {
+        Hotel hotel = hotelRepository.getByIdWithRooms(id)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.HOTEL_NOT_FOUND));
+
+        return this.filterReservableRoomsWithCheckInAndCheckOut(
+                        hotel.getRooms(),
+                        checkIn,
+                        checkOut
+                )
+                .stream().map(r -> RoomConverter.of(r)).collect(Collectors.toList());
     }
 }

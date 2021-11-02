@@ -55,7 +55,7 @@ class HotelTest {
     }
 
     private static final int TEST_GUEST_CNT = 1;
-    private static final LocalDate TEST_DATE_BASE = LocalDate.of(2020, 1, 1);
+    private static final LocalDate TEST_BASE_DATE = LocalDate.of(2020, 1, 1);
 
     @Test
     @DisplayName("Hotel - Room 연관관계 편의 메서드 테스트")
@@ -65,15 +65,15 @@ class HotelTest {
                         List.of(
                                 Room.builder().maxGuest(TEST_GUEST_CNT).build()
                                         .addReservations(List.of(
-                                                Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                                Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                                         )),
                                 Room.builder().maxGuest(TEST_GUEST_CNT).build()
                                         .addReservations(List.of(
-                                                Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                                Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                                         )),
                                 Room.builder().maxGuest(TEST_GUEST_CNT).build()
                                         .addReservations(List.of(
-                                                Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                                Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                                         ))
                         )
                 );

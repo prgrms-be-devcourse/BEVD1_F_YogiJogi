@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class HotelDetailDto {
+public class HotelDetailResponseDto {
 
     private String name;
     private String region;

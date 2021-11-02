@@ -2,31 +2,32 @@ package com.programmers.yogijogi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.yogijogi.converter.RoomConverter;
-import com.programmers.yogijogi.entity.Hotel;
-import com.programmers.yogijogi.entity.Reservation;
-import com.programmers.yogijogi.entity.Room;
-import com.programmers.yogijogi.entity.User;
-import com.programmers.yogijogi.entity.dto.RoomDto;
+import com.programmers.yogijogi.entity.*;
+import com.programmers.yogijogi.entity.dto.RoomDetailDto;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
 import com.programmers.yogijogi.repository.UserRepository;
 import com.programmers.yogijogi.service.RoomService;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +37,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest
+@ActiveProfiles("test")
 class RoomApiControllerTest {
+
+    @Value("${property.test.imageSource}")
+    private String IMAGE_SOURCE;
 
     @Autowired
     private MockMvc mockMvc;
@@ -79,6 +84,7 @@ class RoomApiControllerTest {
                 .stock(1)
                 .maxGuest(2)
                 .hotel(hotel1)
+                .image(new Image("testUrl"))
                 .build();
 
         Room room2 = Room.builder()
@@ -87,6 +93,7 @@ class RoomApiControllerTest {
                 .stock(1)
                 .maxGuest(2)
                 .hotel(hotel1)
+                .image(new Image("testUrl"))
                 .build();
 
         hotelId = hotelRepository.save(hotel1).getId();
@@ -95,34 +102,8 @@ class RoomApiControllerTest {
     }
 
     @Test
-    void getRooms() throws Exception {
-
-        User user = User.builder()
-                .name("testUserName")
-                .build();
-
-        RoomDto findRoom = roomService.findOne(savedRoomId1);
-        Reservation reservation1 = Reservation.builder()
-                .user(user)
-                .checkIn(LocalDate.now())
-                .checkOut(LocalDate.now().plusDays(3))
-                .room(roomConverter.convertRoom(findRoom))
-                .build();
-
-        userRepository.save(user);
-        reservationRepository.save(reservation1);
-
-        mockMvc.perform(get("/hotels/{hotelId}/rooms", hotelId)
-                  .param("startDate", String.valueOf(LocalDate.now().plusDays(1)))
-                  .param("endDate", String.valueOf(LocalDate.now().plusDays(4)))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
     void findOneRoom() throws Exception {
-        RoomDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDetailDto findRoom = roomService.findOne(savedRoomId1);
 
         User user = User.builder()
                 .name("testUserName")
@@ -146,4 +127,18 @@ class RoomApiControllerTest {
                 .andDo(print());
     }
 
+
+    @Test
+    @DisplayName("룸 이미지를 등록해야 한다.")
+    void uploadRoomImage() throws Exception {
+        File f = new File(IMAGE_SOURCE);
+        FileInputStream fis = new FileInputStream(f);
+
+        MockMultipartFile multipartFile = new MockMultipartFile("images", f.getName(), "multipart/form-data", fis);
+        mockMvc.perform(fileUpload("/rooms/{id}/images", savedRoomId1)
+                        .file(multipartFile)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }
