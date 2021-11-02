@@ -29,13 +29,9 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class RoomService {
 
-    @Autowired
     private final RoomRepository roomRepository;
-    @Autowired
     private final HotelRepository hotelRepository;
-    @Autowired
     private final ReservationRepository reservationRepository;
-    @Autowired
     private final RoomConverter roomConverter;
 
     public RoomDto findOne(Long id) throws NotFoundException {
