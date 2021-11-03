@@ -1,30 +1,29 @@
 package com.programmers.yogijogi.service;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import com.programmers.yogijogi.entity.Hotel;
-import com.programmers.yogijogi.repository.HotelRepository;
-import com.programmers.yogijogi.repository.RoomRepository;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.hamcrest.Matchers.*;
-
 import com.programmers.yogijogi.entity.Province;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.dto.ReservableHotelRequestDto;
-import java.util.List;
-import java.util.stream.Stream;
+import com.programmers.yogijogi.repository.HotelRepository;
+import com.programmers.yogijogi.repository.RoomRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @Slf4j

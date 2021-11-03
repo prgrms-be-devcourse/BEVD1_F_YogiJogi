@@ -5,11 +5,6 @@ import com.programmers.yogijogi.entity.Province;
 import com.programmers.yogijogi.entity.Theme;
 import com.programmers.yogijogi.entity.dto.*;
 import com.programmers.yogijogi.service.HotelService;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/hotels")

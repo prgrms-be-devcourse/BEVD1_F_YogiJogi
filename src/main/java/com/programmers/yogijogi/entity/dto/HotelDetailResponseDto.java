@@ -1,6 +1,5 @@
 package com.programmers.yogijogi.entity.dto;
 
-import com.programmers.yogijogi.entity.Theme;
 import lombok.Builder;
 import lombok.Getter;
 

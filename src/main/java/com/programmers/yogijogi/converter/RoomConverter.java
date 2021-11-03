@@ -1,11 +1,9 @@
 package com.programmers.yogijogi.converter;
 
 import com.programmers.yogijogi.entity.Hotel;
-import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
-import com.programmers.yogijogi.entity.dto.HotelDto;
+import com.programmers.yogijogi.entity.dto.HotelDetailInRoomDto;
 import com.programmers.yogijogi.entity.dto.ReservableRoomResponseDto;
-import com.programmers.yogijogi.entity.dto.ReservationDto;
 import com.programmers.yogijogi.entity.dto.RoomDetailDto;
 import org.springframework.stereotype.Controller;
 
@@ -34,25 +32,14 @@ public class RoomConverter {
                 .maxGuest(roomDetailDto.getMaxGuest())
                 .hotel(this.convertHotel(roomDetailDto.getHoteldto()))
                 .build();
-
     }
 
-    public Hotel convertHotel(HotelDto hotelDto) {
+    public Hotel convertHotel(HotelDetailInRoomDto hotelDetailInRoomDto) {
         return Hotel.builder()
-                .id(hotelDto.getId())
-                .name(hotelDto.getName())
+                .id(hotelDetailInRoomDto.getId())
+                .name(hotelDetailInRoomDto.getName())
                 .build();
     }
-
-    public Reservation convertReservation(ReservationDto reservationDto) {
-        return Reservation.builder()
-                .id(reservationDto.getId())
-                .checkOut(reservationDto.getCheckOut())
-                .checkIn(reservationDto.getCheckIn())
-                .room(this.convertRoom(reservationDto.getRoomdto()))
-                .build();
-    }
-
 
     // entity -> dto
     public RoomDetailDto convertRoomDto(Room room) {
@@ -66,20 +53,10 @@ public class RoomConverter {
                 .build();
     }
 
-    public HotelDto convertHotelDto(Hotel hotel) {
-        return HotelDto.builder()
+    public HotelDetailInRoomDto convertHotelDto(Hotel hotel) {
+        return HotelDetailInRoomDto.builder()
                 .id(hotel.getId())
                 .name(hotel.getName())
                 .build();
     }
-
-    public ReservationDto convertReservationDto(Reservation reservation) {
-        return ReservationDto.builder()
-                .id(reservation.getId())
-                .checkOut(reservation.getCheckOut())
-                .checkIn(reservation.getCheckIn())
-                .roomdto(this.convertRoomDto(reservation.getRoom()))
-                .build();
-    }
-
 }
