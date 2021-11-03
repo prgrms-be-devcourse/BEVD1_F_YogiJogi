@@ -1,6 +1,4 @@
 package com.programmers.yogijogi.entity;
-
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

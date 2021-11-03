@@ -2,7 +2,6 @@ package com.programmers.yogijogi.entity.dto;
 
 import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Province;
-import com.programmers.yogijogi.entity.Region;
 import com.programmers.yogijogi.entity.Theme;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Locale;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ImageResponseDto {
-
+public class HotelDetailInRoomDto {
     private Long id;
-    private String url;
+    private String name;
 }

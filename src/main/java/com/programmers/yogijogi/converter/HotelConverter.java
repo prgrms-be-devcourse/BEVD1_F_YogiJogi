@@ -4,7 +4,6 @@ import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Review;
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.dto.HotelDetailResponseDto;
-
 import com.programmers.yogijogi.entity.dto.ReservableHotelResponseDto;
 
 import java.util.List;

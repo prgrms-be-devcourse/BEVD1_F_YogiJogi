@@ -1,15 +1,8 @@
 package com.programmers.yogijogi.repository;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Stream;
-
 import com.programmers.yogijogi.exception.NotFoundException;
 import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +14,13 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @DataJpaTest
 @Slf4j

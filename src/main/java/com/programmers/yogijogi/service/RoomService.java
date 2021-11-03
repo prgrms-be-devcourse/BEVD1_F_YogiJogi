@@ -13,7 +13,6 @@ import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +27,9 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class RoomService {
 
-    @Autowired
     private final RoomRepository roomRepository;
-    @Autowired
     private final HotelRepository hotelRepository;
-    @Autowired
     private final ReservationRepository reservationRepository;
-    @Autowired
     private final RoomConverter roomConverter;
 
     public RoomDetailDto findOne(Long id) throws NotFoundException {
