@@ -15,13 +15,13 @@ public class ReservationResponseDto {
     private LocalDate checkIn;
     private LocalDate checkOut;
     private Long roomId;
-    private String name;
+    private ReservationUserDto reservationUserDto;
 
-    public ReservationResponseDto(Long id, LocalDate checkIn, LocalDate checkOut, Long roomId, String name) {
+    public ReservationResponseDto(Long id, LocalDate checkIn, LocalDate checkOut, Long roomId, ReservationUserDto reservationUserDto) {
         this.id = id;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.roomId = roomId;
-        this.name = name;
+        this.reservationUserDto = reservationUserDto;
     }
 }

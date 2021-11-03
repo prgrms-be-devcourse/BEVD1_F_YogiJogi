@@ -34,6 +34,7 @@ public class ReservationConverter {
     // dto -> entity
     public User convertUser(ReservationUserDto reservationUserDto) {
         return User.builder()
+                .id(reservationUserDto.getId())
                 .name(reservationUserDto.getName())
                 .build();
 
@@ -47,7 +48,14 @@ public class ReservationConverter {
                 .checkIn(reservation.getCheckIn())
                 .checkOut(reservation.getCheckOut())
                 .roomId(reservation.getRoom().getId())
-                .name(reservation.getUser().getName())
+                .reservationUserDto(this.convertReservationUserDto(reservation.getUser()))
+                .build();
+    }
+
+    public ReservationUserDto convertReservationUserDto(User User) {
+        return ReservationUserDto.builder()
+                .id(User.getId())
+                .name(User.getName())
                 .build();
     }
 }

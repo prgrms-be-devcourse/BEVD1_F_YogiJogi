@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class ReservationUserDto {
+    private Long id;
     private String name;
 
-    public ReservationUserDto(String name) {
+    public ReservationUserDto(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 }

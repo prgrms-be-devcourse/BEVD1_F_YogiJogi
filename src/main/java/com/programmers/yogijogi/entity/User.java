@@ -26,7 +26,8 @@ public class User {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public User(String name) {
+    public User(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
