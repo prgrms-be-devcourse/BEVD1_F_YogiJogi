@@ -3,12 +3,7 @@ package com.programmers.yogijogi.controller;
 import com.programmers.yogijogi.common.S3Uploader;
 import com.programmers.yogijogi.entity.Province;
 import com.programmers.yogijogi.entity.Theme;
-import com.programmers.yogijogi.entity.dto.HotelCreateDto;
-import com.programmers.yogijogi.entity.dto.HotelDetailDto;
-import com.programmers.yogijogi.entity.dto.ImageResponseDto;
-import com.programmers.yogijogi.entity.dto.ReservableHotelRequestDto;
-import com.programmers.yogijogi.entity.dto.ReservableHotelResponseDto;
-import com.programmers.yogijogi.entity.dto.ReviewResponseDto;
+import com.programmers.yogijogi.entity.dto.*;
 import com.programmers.yogijogi.service.HotelService;
 
 import java.time.LocalDate;
@@ -41,34 +36,7 @@ public class HotelApiController {
     @Autowired
     private S3Uploader s3Uploader;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<HotelDetailDto> getOne(@PathVariable Long id) {
-        return ResponseEntity.ok(hotelService.getOne(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<Long> create(@Valid @RequestBody HotelCreateDto hotelCreateDto) {
-        Long hotelId = hotelService.save(hotelCreateDto);
-        return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/{id}/images")
-    public ResponseEntity<String> uploadHotelImage(
-            @RequestParam("images") MultipartFile multipartFile,
-            @PathVariable("id") Long hotelId) throws IOException {
-        String url = s3Uploader.upload(multipartFile, HOTEL_DIRNAME + "/" + hotelId);
-        hotelService.saveHotelImageUrl(hotelId, url);
-        return ResponseEntity.ok(url);
-    }
-
-    @GetMapping("/{id}/images")
-    public ResponseEntity<Page<ImageResponseDto>> getAllImageByHotelId(
-            @PathVariable(value = "id") Long id,
-            Pageable pageable) {
-        return ResponseEntity.ok(hotelService.getImageByHotelId(id, pageable));
-    }
-
-    // Validation Logic은 아직 추가하지 않음.
+    // 지역에 맞는 호텔 조회
     @GetMapping
     public ResponseEntity<List<ReservableHotelResponseDto>> getReservableHotelBy(
             @RequestParam(value = "province") Province province,  // 지역 이름. -> hotel에 속하는 필드
@@ -101,10 +69,51 @@ public class HotelApiController {
         return ResponseEntity.ok(results);
     }
 
+    // 호텔 단건 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<HotelDetailResponseDto> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(hotelService.getOne(id));
+    }
+
+    // 호텔 생성
+    @PostMapping
+    public ResponseEntity<Long> create(@Valid @RequestBody HotelCreateDto hotelCreateDto) {
+        Long hotelId = hotelService.save(hotelCreateDto);
+        return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
+    }
+
+    // 호텔 이미지 업로드(s3)
+    @PostMapping("/{id}/images")
+    public ResponseEntity<String> uploadHotelImage(
+            @RequestParam("images") MultipartFile multipartFile,
+            @PathVariable("id") Long hotelId) throws IOException {
+        String url = s3Uploader.upload(multipartFile, HOTEL_DIRNAME + "/" + hotelId);
+        hotelService.saveHotelImageUrl(hotelId, url);
+        return ResponseEntity.ok(url);
+    }
+
+    // 호텔 이미지 불러오기(Url)
+    @GetMapping("/{id}/images")
+    public ResponseEntity<Page<ImageResponseDto>> getAllImageByHotelId(
+            @PathVariable(value = "id") Long id,
+            Pageable pageable) {
+        return ResponseEntity.ok(hotelService.getImageByHotelId(id, pageable));
+    }
+
+    // 호텔 단건 조회시 예약 가능한 룸을 불러오는 api
+    @GetMapping("/{id}/rooms")
+    public ResponseEntity<List<ReservableRoomResponseDto>> getReservableRooms(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate)
+    {
+        return ResponseEntity.ok(hotelService.getReservableRooms(id, startDate, endDate));
+    }
+
+    // 호텔 단건 조회시, 리뷰 불러오기(2개까지만 불러옴)
     @GetMapping("/{id}/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getTwoReviews(@PathVariable(value = "id") Long id) {
         List<ReviewResponseDto> reviewResponseDtos = hotelService.getTwoReviewsByHotelId(id);
         return ResponseEntity.ok(reviewResponseDtos);
     }
-
 }

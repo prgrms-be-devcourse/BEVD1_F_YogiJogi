@@ -1,22 +1,20 @@
 package com.programmers.yogijogi.converter;
 
 import com.programmers.yogijogi.entity.Hotel;
-import com.programmers.yogijogi.entity.Image;
 import com.programmers.yogijogi.entity.Review;
 import com.programmers.yogijogi.entity.Room;
-import com.programmers.yogijogi.entity.dto.HotelDetailDto;
+import com.programmers.yogijogi.entity.dto.HotelDetailResponseDto;
 
 import com.programmers.yogijogi.entity.dto.ReservableHotelResponseDto;
-import com.programmers.yogijogi.entity.dto.RoomDetailDto;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HotelConverter {
 
-    public static HotelDetailDto of(Hotel hotel) {
-        return HotelDetailDto.builder()
+    public static HotelDetailResponseDto of(Hotel hotel) {
+        return HotelDetailResponseDto.builder()
                 .name(hotel.getName())
                 .grade(hotel.getGrade())
                 .region(hotel.getProvince().toString())

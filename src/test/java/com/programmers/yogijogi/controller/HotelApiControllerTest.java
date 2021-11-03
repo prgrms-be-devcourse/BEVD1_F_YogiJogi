@@ -1,19 +1,17 @@
 package com.programmers.yogijogi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.yogijogi.entity.*;
 import com.programmers.yogijogi.entity.dto.HotelCreateDto;
-import com.programmers.yogijogi.exception.NotFoundException;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.UserRepository;
 import com.programmers.yogijogi.service.HotelService;
 import org.junit.jupiter.api.*;
+
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,10 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.io.File;
-import java.io.FileInputStream;
-import org.springframework.util.MultiValueMap;
+import javax.transaction.Transactional;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,6 +49,8 @@ class HotelApiControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    Hotel hotel;
 
     Long hotelId;
 
@@ -121,52 +119,19 @@ class HotelApiControllerTest {
     @DisplayName("호텔의 리뷰를 2개만 가져올 수 있어야한다.")
     void getTwoReviewsByHotelId() throws Exception {
         // given
-        // 호텔과 룸을 먼저 만든다.
-        Hotel hotel = Hotel.builder()
-                .name("testHotelName")
-                .build();
 
-        Room room = Room.builder()
-                .hotel(hotel)
-                .name("testRoomName")
-                .price(3000)
-                .build();
+        User user = User.builder().build();
+        Reservation reservation1 = Reservation.builder().build();
+        Reservation reservation2 = Reservation.builder().build();
 
-        hotel.addRoom(room);
+        user.addReservations(List.of(reservation1, reservation2));
 
-        // 유저와 룸에 예약 객체를 넣어준다.
-        User user = User.builder()
-                .name("testUserName")
-                .build();
-
-        Reservation reservation1 = Reservation.builder()
-                .user(user)
-                .room(room)
-                .checkIn(LocalDate.now())
-                .checkOut(LocalDate.now())
-                .build();
-
-        Reservation reservation2 = Reservation.builder()
-                .user(user)
-                .room(room)
-                .checkIn(LocalDate.now())
-                .checkOut(LocalDate.now())
-                .build();
-
-        // 리뷰를 등록한다.
-        Review review1 = Review.builder()
-                .hotel(hotel)
-                .reservation(reservation1)
-                .content("testReviewContent1")
-                .rating(5)
-                .build();
-
-        Review review2 = Review.builder()
-                .hotel(hotel)
-                .reservation(reservation2)
-                .content("testReviewContent2")
-                .rating(5)
-                .build();
+        Hotel hotel = Hotel.builder().build()
+                .addRooms(List.of(Room.builder().build()
+                        .addReservations(List.of(
+                                reservation1.setReview(Review.builder().build()),
+                                reservation2.setReview(Review.builder().build())
+                        ))));
 
         // when
         hotelRepository.save(hotel);
@@ -179,35 +144,35 @@ class HotelApiControllerTest {
     }
 
     @Test
-    void getReservableHotelBy() throws Exception{
+    void getReservableHotelBy() throws Exception {
         LocalDate checkInTime = LocalDate.now();
         LocalDate checkOutTime = LocalDate.now().plusDays(7);
 
         mockMvc.perform(get("/hotels", hotelId)
-                .queryParam("province", Province.Seoul1.toString())
-                .queryParam("checkIn", checkInTime.toString())
-                .queryParam("checkOut", checkOutTime.toString())
-                .queryParam("guestCnt", String.valueOf(2))
-                .queryParam("hotelGrade", String.valueOf(1))
-                .queryParam("themes", Theme.WITH_PET.toString())
-                .queryParam("themes", Theme.BBQ.toString())
-                .queryParam("themes", Theme.SPA.toString())
-                .queryParam("themes", Theme.SWIMMING_POOL.toString())
-                .queryParam("themes", Theme.TERRACE.toString())
+                        .queryParam("province", Province.Seoul1.toString())
+                        .queryParam("checkIn", checkInTime.toString())
+                        .queryParam("checkOut", checkOutTime.toString())
+                        .queryParam("guestCnt", String.valueOf(2))
+                        .queryParam("hotelGrade", String.valueOf(1))
+                        .queryParam("themes", Theme.WITH_PET.toString())
+                        .queryParam("themes", Theme.BBQ.toString())
+                        .queryParam("themes", Theme.SPA.toString())
+                        .queryParam("themes", Theme.SWIMMING_POOL.toString())
+                        .queryParam("themes", Theme.TERRACE.toString())
 
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(print());
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
     @DisplayName("호텔 생성 요청 객체 파라미터 테스트")
     void hotelCreateDtoParameterExceptionTest() throws Exception {
-        // given : 호텔의 필수 필드인 Region을 생략함
+        // given : 호텔의 필수 필드인 province를 생략함
         HotelCreateDto hotelCreateDto = HotelCreateDto.builder()
                 .name("testName")
                 .grade(5)
-                .theme("pc")
+                .theme(Theme.PC.toString())
                 .build();
 
         // when
@@ -217,6 +182,39 @@ class HotelApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(hotelCreateDto)))
                 .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    static final LocalDate TEST_BASE_DATE = LocalDate.of(2020, 1, 1);
+    static final int TEST_PRICE = 50000;
+    static final int TEST_MAX_GUEST = 4;
+    static final int TEST_MAX_STOCK = 1;
+    static final Image TEST_IMAGE = new Image("testURL");
+
+    @Test
+    @DisplayName("호텔 단건 조회시, 예약가능한 방을 보여줘야한다.")
+    @Transactional
+    void getReservableRooms() throws Exception {
+        Hotel hotel = hotelRepository.findById(hotelId).get();
+        hotel.addRooms(List.of(
+                // 테스트 날짜에 예약 가능한 방
+                Room.builder().name("testName1").price(TEST_PRICE).maxGuest(TEST_MAX_GUEST).stock(TEST_MAX_STOCK).image(TEST_IMAGE).build()
+                        .addReservations(
+                                List.of(Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(3)).build(),
+                                        Reservation.builder().checkIn(TEST_BASE_DATE.plusDays(6)).checkOut(TEST_BASE_DATE.plusDays(7)).build())),
+
+                // 테스트 날짜에 예약 불가능한 방
+                Room.builder().name("testName2").price(TEST_PRICE).maxGuest(TEST_MAX_GUEST).stock(TEST_MAX_STOCK).image(TEST_IMAGE).build()
+                        .addReservations(
+                                List.of(Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(5)).build(),
+                                        Reservation.builder().checkIn(TEST_BASE_DATE.plusDays(6)).checkOut(TEST_BASE_DATE.plusDays(7)).build()))
+        ));
+
+        mockMvc.perform(get("/hotels/{id}/rooms", hotelId)
+                .contentType(MediaType.APPLICATION_JSON)
+                        .queryParam("startDate", TEST_BASE_DATE.plusDays(4).toString())
+                        .queryParam("endDate", TEST_BASE_DATE.plusDays(5).toString()))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

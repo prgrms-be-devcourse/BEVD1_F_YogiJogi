@@ -1,11 +1,9 @@
 package com.programmers.yogijogi.repository;
 
 import com.programmers.yogijogi.entity.Review;
-import com.programmers.yogijogi.entity.dto.ReviewResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {

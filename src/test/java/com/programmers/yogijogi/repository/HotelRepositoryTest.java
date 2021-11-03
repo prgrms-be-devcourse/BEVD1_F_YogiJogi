@@ -7,9 +7,11 @@ import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import com.programmers.yogijogi.exception.NotFoundException;
+import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,21 +32,34 @@ class HotelRepositoryTest {
   @ArgumentsSource(HotelInfoProvider.class)
   @ParameterizedTest
   @Transactional
+  public void findHotelWithRooms(Hotel hotel) {
+      hotel = hotelRepository.save(hotel);
+      hotelRepository.flush();
+
+      Hotel hotelWithRooms = hotelRepository.getByIdWithRooms(hotel.getId())
+              .orElseThrow(() -> new NotFoundException(ErrorMessage.HOTEL_NOT_FOUND));
+
+      assertThat(hotelWithRooms.getRooms().size(), is(3));
+  }
+
+  @ArgumentsSource(HotelInfoProvider.class)
+  @ParameterizedTest
+  @Transactional
   public void findHotelsWithDateAndRegionAndGuestCnt(Hotel hotel, int queryResultCnt) {
 //    Hotel hotel = Hotel.builder().build()
 //        .addRooms(
 //            List.of(
 //                Room.builder().maxGuest(TEST_GUEST_CNT).build()
 //                    .addReservations(List.of(
-//                        Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+//                        Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
 //                    )),
 //                Room.builder().maxGuest(TEST_GUEST_CNT).build()
 //                    .addReservations(List.of(
-//                        Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+//                        Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
 //                    )),
 //                Room.builder().maxGuest(TEST_GUEST_CNT).build()
 //                    .addReservations(List.of(
-//                        Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+//                        Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
 //                    ))
 //            )
 //        );
@@ -68,7 +83,7 @@ class HotelRepositoryTest {
 //    }
   }
 
-  static final LocalDate TEST_DATE_BASE = LocalDate.of(2020, 1, 1);
+  static final LocalDate TEST_BASE_DATE = LocalDate.of(2020, 1, 1);
   static final int TEST_GUEST_CNT = 3;
 
   static class HotelInfoProvider implements ArgumentsProvider {
@@ -82,20 +97,20 @@ class HotelRepositoryTest {
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
                               .addReservations(List.of(
-                                  Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                  Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                               )),
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
                               .addReservations(List.of(
-                                  Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                  Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                               )),
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
                               .addReservations(List.of(
-                                  Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                  Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                               ))
                       )
                   ),
               1
-          ), //  Hotel에 속한 방들이 모두 TEST_DATE_BASE의 +1일 이내에 예약이 되어 있을 경우
+          ), //  Hotel에 속한 방들이 모두 TEST_BASE_DATE의 +1일 이내에 예약이 되어 있을 경우
 
           Arguments.of(
               Hotel.builder().build()
@@ -127,7 +142,7 @@ class HotelRepositoryTest {
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
                               .addReservations(List.of(
-                                  Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                  Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                               )),
                           // 인원은 수용 가능하지만 해당 날짜에 예약이 잡혀있는 경우
 
@@ -136,7 +151,7 @@ class HotelRepositoryTest {
 
                           Room.builder().maxGuest(TEST_GUEST_CNT + 1).build()
                               .addReservations(List.of(
-                                  Reservation.builder().checkIn(TEST_DATE_BASE).checkOut(TEST_DATE_BASE.plusDays(1)).build()
+                                  Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(1)).build()
                               ))
                           // 인원도 수용이 불가능하고 예약도 이미 잡혀있는 경우,
                       )

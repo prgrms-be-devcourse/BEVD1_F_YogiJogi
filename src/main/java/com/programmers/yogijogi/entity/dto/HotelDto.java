@@ -13,5 +13,4 @@ import java.time.LocalDate;
 public class HotelDto {
     private Long id;
     private String name;
-
 }

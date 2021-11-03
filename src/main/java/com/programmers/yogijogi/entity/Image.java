@@ -29,10 +29,18 @@ public class Image {
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
+    @OneToOne
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
+    private Room room;
+
     public void setHotel(Hotel hotel) {
         if(Objects.nonNull(this.hotel)) {
             this.hotel.getImages().remove(this);
         }
         this.hotel = hotel;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }
