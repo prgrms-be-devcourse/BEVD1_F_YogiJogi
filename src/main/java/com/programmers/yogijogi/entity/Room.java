@@ -38,18 +38,17 @@ public class Room {
     @Column(name = "max_guest")
     private int maxGuest;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "room")
-    private Image image;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
+    private List<Image> images = new ArrayList<>();
 
     @Builder
-    public Room(Long id, String name, int price, Hotel hotel, int stock, int maxGuest, Image image) {
+    public Room(Long id, String name, int price, Hotel hotel, int stock, int maxGuest) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.hotel = hotel;
         this.stock = stock;
         this.maxGuest = maxGuest;
-        this.image = image;
     }
 
     public void setHotel(Hotel hotel) {
@@ -59,9 +58,10 @@ public class Room {
         this.hotel = hotel;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public Room addImage(Image image) {
+        this.images.add(image);
         image.setRoom(this);
+        return this;
     }
 
     public void addReservation(Reservation reservation) {

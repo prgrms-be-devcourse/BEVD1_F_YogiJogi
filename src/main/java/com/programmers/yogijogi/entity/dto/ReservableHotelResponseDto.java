@@ -11,7 +11,8 @@ public class ReservableHotelResponseDto {
   Long id;
   String name;
   Double reviewAverage;
+  Integer grade;
   Integer reviewCnt;
   Integer price;
-  List<Image> images;
+  String imageUrl;
 }

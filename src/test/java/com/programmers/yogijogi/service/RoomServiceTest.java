@@ -5,7 +5,7 @@ import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.User;
-import com.programmers.yogijogi.entity.dto.RoomDetailDto;
+import com.programmers.yogijogi.entity.dto.RoomDetailResponseDto;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @Slf4j
+@ActiveProfiles("test")
 class RoomServiceTest {
     @Autowired
     private RoomService roomService;
@@ -86,8 +88,8 @@ class RoomServiceTest {
     @Test
     @DisplayName("예약가능한 방이 없을 경우 예외를 던져야한다 ")
     void notRooms() throws NotFoundException {
-        RoomDetailDto findRoom = roomService.findOne(savedRoomId1);
-        RoomDetailDto findRoom2 = roomService.findOne(savedRoomId2);
+        RoomDetailResponseDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDetailResponseDto findRoom2 = roomService.findOne(savedRoomId2);
         User user = User.builder()
                 .name("testUserName")
                 .build();
@@ -119,7 +121,7 @@ class RoomServiceTest {
     @Test
     @DisplayName("해당 날짜에 예약이 되어있을 경우 예외를 던져준다. ")
     void findOneByDate() throws NotFoundException {
-        RoomDetailDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDetailResponseDto findRoom = roomService.findOne(savedRoomId1);
 
         User user = User.builder()
                 .name("testUserName")
@@ -144,7 +146,7 @@ class RoomServiceTest {
     @Test
     @DisplayName("해당 날짜에 예약이 가능할 경우 객실 상세 조회를 해준다 ")
     void findOneByDate2() throws NotFoundException {
-        RoomDetailDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDetailResponseDto findRoom = roomService.findOne(savedRoomId1);
 
         User user = User.builder()
                 .name("testUserName")
@@ -162,7 +164,7 @@ class RoomServiceTest {
 
         LocalDate checkIn = LocalDate.now().plusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(4);
-        RoomDetailDto room = roomService.findOneByDate(savedRoomId1, checkIn, checkOut);
+        RoomDetailResponseDto room = roomService.findOneByDate(savedRoomId1, checkIn, checkOut);
         Assertions.assertThat(room.getId()).isEqualTo(savedRoomId1);
 
 
@@ -171,7 +173,7 @@ class RoomServiceTest {
     @Test
     @DisplayName("날짜를 통해 이용가능한 룸들 조회 ")
     void findAllByDate2() throws NotFoundException {
-        RoomDetailDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDetailResponseDto findRoom = roomService.findOne(savedRoomId1);
         User user = User.builder()
                 .name("testUserName")
                 .build();
@@ -188,7 +190,7 @@ class RoomServiceTest {
 
         LocalDate checkIn = LocalDate.now().plusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(4);
-        List<RoomDetailDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
+        List<RoomDetailResponseDto> rooms = roomService.findAllByDate2(savedHotelId, checkIn, checkOut);
         Assertions.assertThat(rooms.get(0).getName()).isEqualTo("룸룸");
         Assertions.assertThat(rooms.size()).isEqualTo(1);
     }

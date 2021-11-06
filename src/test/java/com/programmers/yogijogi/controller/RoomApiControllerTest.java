@@ -3,7 +3,8 @@ package com.programmers.yogijogi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.programmers.yogijogi.converter.RoomConverter;
 import com.programmers.yogijogi.entity.*;
-import com.programmers.yogijogi.entity.dto.RoomDetailDto;
+import com.programmers.yogijogi.entity.dto.RoomCreateRequestDto;
+import com.programmers.yogijogi.entity.dto.RoomDetailResponseDto;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,7 +86,6 @@ class RoomApiControllerTest {
                 .stock(1)
                 .maxGuest(2)
                 .hotel(hotel1)
-                .image(new Image("testUrl"))
                 .build();
 
         Room room2 = Room.builder()
@@ -93,8 +94,10 @@ class RoomApiControllerTest {
                 .stock(1)
                 .maxGuest(2)
                 .hotel(hotel1)
-                .image(new Image("testUrl"))
                 .build();
+
+        room1.addImage((new Image("testUrl")));
+        room2.addImage((new Image("testUrl")));
 
         hotelId = hotelRepository.save(hotel1).getId();
         savedRoomId1 = roomRepository.save(room1).getId();
@@ -103,7 +106,7 @@ class RoomApiControllerTest {
 
     @Test
     void findOneRoom() throws Exception {
-        RoomDetailDto findRoom = roomService.findOne(savedRoomId1);
+        RoomDetailResponseDto findRoom = roomService.findOne(savedRoomId1);
 
         User user = User.builder()
                 .name("testUserName")
@@ -119,9 +122,9 @@ class RoomApiControllerTest {
         userRepository.save(user);
         reservationRepository.save(reservation1);
 
-        mockMvc.perform(get("/hotels/{hotelId}/{roomId}",hotelId,savedRoomId1)
-                        .param("startDate", String.valueOf(LocalDate.now().plusDays(1)))
-                        .param("endDate", String.valueOf(LocalDate.now().plusDays(4)))
+        mockMvc.perform(get("/hotels/{hotelId}/{roomId}", hotelId, savedRoomId1)
+                        .param("checkIn", String.valueOf(LocalDate.now().plusDays(1)))
+                        .param("checkOut", String.valueOf(LocalDate.now().plusDays(4)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -139,6 +142,19 @@ class RoomApiControllerTest {
                         .file(multipartFile)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("방을 생성할 수 있다.")
+    void create() throws Exception {
+        RoomCreateRequestDto dto = RoomCreateRequestDto.builder().build();
+
+
+        mockMvc.perform(post("/hotels/{hotelId}/rooms", hotelId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isCreated())
                 .andDo(print());
     }
 }

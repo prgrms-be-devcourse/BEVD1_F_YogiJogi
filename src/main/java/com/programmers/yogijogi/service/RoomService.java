@@ -5,7 +5,8 @@ import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Image;
 import com.programmers.yogijogi.entity.Reservation;
 import com.programmers.yogijogi.entity.Room;
-import com.programmers.yogijogi.entity.dto.RoomDetailDto;
+import com.programmers.yogijogi.entity.dto.RoomCreateRequestDto;
+import com.programmers.yogijogi.entity.dto.RoomDetailResponseDto;
 import com.programmers.yogijogi.exception.NotFoundException;
 import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import com.programmers.yogijogi.repository.HotelRepository;
@@ -32,13 +33,13 @@ public class RoomService {
     private final ReservationRepository reservationRepository;
     private final RoomConverter roomConverter;
 
-    public RoomDetailDto findOne(Long id) throws NotFoundException {
+    public RoomDetailResponseDto findOne(Long id) throws NotFoundException {
         return roomRepository.findById(id)
                 .map(roomConverter::convertRoomDto)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
     }
 
-    public List<RoomDetailDto> findAllByHotelId(Long hotelId) {
+    public List<RoomDetailResponseDto> findAllByHotelId(Long hotelId) {
         Hotel findHotel = hotelRepository.getById(hotelId);
         List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow();
         return rooms.stream().map(roomConverter::convertRoomDto).collect(toList());
@@ -46,7 +47,7 @@ public class RoomService {
 
 
     @Transactional
-    public List<RoomDetailDto> findAllByDate2(Long hotelId, LocalDate checkIn, LocalDate checkOut) throws NotFoundException {
+    public List<RoomDetailResponseDto> findAllByDate2(Long hotelId, LocalDate checkIn, LocalDate checkOut) throws NotFoundException {
         Hotel findHotel = hotelRepository.getById(hotelId);
         List<Room> rooms = roomRepository.findAllByHotel(findHotel).orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
 
@@ -77,7 +78,7 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomDetailDto findOneByDate(Long roomId, LocalDate checkIn, LocalDate checkOut) throws NotFoundException {
+    public RoomDetailResponseDto findOneByDate(Long roomId, LocalDate checkIn, LocalDate checkOut) throws NotFoundException {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
         List<Reservation> reservations = reservationRepository.getAllByRoom(room);
 
@@ -93,6 +94,14 @@ public class RoomService {
     @Transactional
     public void saveRoomImageUrl(Long roomId, String url) {
         Room room = roomRepository.findById(roomId).orElseThrow(() -> new NotFoundException(ErrorMessage.ROOM_NOT_FOUND));
-        room.setImage(new Image(url));
+        room.addImage(new Image(url));
+    }
+
+    @Transactional
+    public void save(Long hotelId, RoomCreateRequestDto roomCreateRequestDto) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.HOTEL_NOT_FOUND));
+
+        hotel.addRoom(roomCreateRequestDto.toEntity());
     }
 }

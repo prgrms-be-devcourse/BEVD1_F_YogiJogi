@@ -108,6 +108,7 @@ public class HotelService {
 
         return reservableRooms.stream()
                 .map(Room::getHotel)
+                .filter(hotel -> hotel.getProvince().equals(reservableHotelRequestDto.getProvince()))
                 .distinct()
                 .collect(Collectors.toList());
 

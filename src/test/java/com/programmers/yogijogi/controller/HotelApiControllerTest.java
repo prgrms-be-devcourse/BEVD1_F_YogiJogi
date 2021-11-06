@@ -197,13 +197,13 @@ class HotelApiControllerTest {
         Hotel hotel = hotelRepository.findById(hotelId).get();
         hotel.addRooms(List.of(
                 // 테스트 날짜에 예약 가능한 방
-                Room.builder().name("testName1").price(TEST_PRICE).maxGuest(TEST_MAX_GUEST).stock(TEST_MAX_STOCK).image(TEST_IMAGE).build()
+                Room.builder().name("testName1").price(TEST_PRICE).maxGuest(TEST_MAX_GUEST).stock(TEST_MAX_STOCK).build()
                         .addReservations(
                                 List.of(Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(3)).build(),
                                         Reservation.builder().checkIn(TEST_BASE_DATE.plusDays(6)).checkOut(TEST_BASE_DATE.plusDays(7)).build())),
 
                 // 테스트 날짜에 예약 불가능한 방
-                Room.builder().name("testName2").price(TEST_PRICE).maxGuest(TEST_MAX_GUEST).stock(TEST_MAX_STOCK).image(TEST_IMAGE).build()
+                Room.builder().name("testName2").price(TEST_PRICE).maxGuest(TEST_MAX_GUEST).stock(TEST_MAX_STOCK).build()
                         .addReservations(
                                 List.of(Reservation.builder().checkIn(TEST_BASE_DATE).checkOut(TEST_BASE_DATE.plusDays(5)).build(),
                                         Reservation.builder().checkIn(TEST_BASE_DATE.plusDays(6)).checkOut(TEST_BASE_DATE.plusDays(7)).build()))
@@ -211,8 +211,8 @@ class HotelApiControllerTest {
 
         mockMvc.perform(get("/hotels/{id}/rooms", hotelId)
                 .contentType(MediaType.APPLICATION_JSON)
-                        .queryParam("startDate", TEST_BASE_DATE.plusDays(4).toString())
-                        .queryParam("endDate", TEST_BASE_DATE.plusDays(5).toString()))
+                        .queryParam("checkIn", TEST_BASE_DATE.plusDays(4).toString())
+                        .queryParam("checkOut", TEST_BASE_DATE.plusDays(5).toString()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

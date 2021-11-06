@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegionController {
 
-  @RequestMapping("api/v1/hotels")
+  @RequestMapping("/")
   public ResponseEntity<RegionResponseDto> getRegions() {
     return ResponseEntity.ok(
         new RegionResponseDto()

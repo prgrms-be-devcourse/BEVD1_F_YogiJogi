@@ -26,7 +26,7 @@ import java.util.Objects;
 @Slf4j
 public class HotelApiController {
 
-    public final String HOTEL_DIRNAME = "/hotels";
+    public final String HOTEL_DIRNAME = "hotels";
 
     @Autowired
     private HotelService hotelService;
@@ -40,7 +40,7 @@ public class HotelApiController {
             @RequestParam(value = "province") Province province,  // 지역 이름. -> hotel에 속하는 필드
             @RequestParam(value = "checkIn") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,  // 체크인 날짜. -> reservation에 속하는 필드
             @RequestParam(value = "checkOut") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut,  // 체크인 날짜. -> reservation에 속하는 필드
-            @RequestParam int guestCnt, // 숙박 인원. -> room에 속하는 필
+            @RequestParam(value = "guestCnt") int guestCnt, // 숙박 인원. -> room에 속하는 필
 
             // 필수가 아닌 값들.
             @RequestParam(required = false) Integer hotelGrade,
@@ -102,10 +102,10 @@ public class HotelApiController {
     @GetMapping("/{id}/rooms")
     public ResponseEntity<List<ReservableRoomResponseDto>> getReservableRooms(
             @PathVariable Long id,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate endDate)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate checkIn,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate checkOut)
     {
-        return ResponseEntity.ok(hotelService.getReservableRooms(id, startDate, endDate));
+        return ResponseEntity.ok(hotelService.getReservableRooms(id, checkIn, checkOut));
     }
 
     // 호텔 단건 조회시, 리뷰 불러오기(2개까지만 불러옴)

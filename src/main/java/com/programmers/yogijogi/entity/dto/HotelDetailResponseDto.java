@@ -13,6 +13,7 @@ public class HotelDetailResponseDto {
     private String region;
     private int grade;
     private int totalReviews;
+    private double reviewAverage;
     private String theme;
     private List<ImageResponseDto> imageResponseDtos;
 }

@@ -29,7 +29,7 @@ public class Image {
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 

@@ -4,33 +4,41 @@ import com.programmers.yogijogi.entity.Hotel;
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.dto.HotelDetailInRoomDto;
 import com.programmers.yogijogi.entity.dto.ReservableRoomResponseDto;
-import com.programmers.yogijogi.entity.dto.RoomDetailDto;
+import com.programmers.yogijogi.entity.dto.RoomDetailResponseDto;
 import org.springframework.stereotype.Controller;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Controller
 public class RoomConverter {
 
     public static ReservableRoomResponseDto of(Room room) {
-        return ReservableRoomResponseDto.builder()
+        ReservableRoomResponseDto dto = ReservableRoomResponseDto.builder()
                 .id(room.getId())
                 .name(room.getName())
                 .price(room.getPrice())
                 .stock(room.getStock())
                 .maxGuest(room.getMaxGuest())
-                .imageResponseDto(ImageConverter.of(room.getImage()))
                 .build();
+
+        if(room.getImages().size() > 0) {
+            dto.setImageResponseDto(ImageConverter.of(room.getImages().get(0)));
+        }
+
+        return dto;
     }
 
     // dto -> entity
-    public Room convertRoom(RoomDetailDto roomDetailDto) {
+    public Room convertRoom(RoomDetailResponseDto roomDetailResponseDto) {
         return Room.builder()
-                .id(roomDetailDto.getId())
-                .name(roomDetailDto.getName())
-                .price(roomDetailDto.getPrice())
-                .stock(roomDetailDto.getStock())
-                .maxGuest(roomDetailDto.getMaxGuest())
-                .hotel(this.convertHotel(roomDetailDto.getHoteldto()))
+                .id(roomDetailResponseDto.getId())
+                .name(roomDetailResponseDto.getName())
+                .price(roomDetailResponseDto.getPrice())
+                .stock(roomDetailResponseDto.getStock())
+                .maxGuest(roomDetailResponseDto.getMaxGuest())
+                .hotel(this.convertHotel(roomDetailResponseDto.getHoteldto()))
                 .build();
     }
 
@@ -42,13 +50,15 @@ public class RoomConverter {
     }
 
     // entity -> dto
-    public RoomDetailDto convertRoomDto(Room room) {
-        return RoomDetailDto.builder()
+    public RoomDetailResponseDto convertRoomDto(Room room) {
+        return RoomDetailResponseDto.builder()
                 .id(room.getId())
                 .name(room.getName())
                 .price(room.getPrice())
                 .stock(room.getStock())
                 .maxGuest(room.getMaxGuest())
+                .imageResponseDtos(
+                        room.getImages().stream().map(ImageConverter::of).collect(Collectors.toList()))
                 .hoteldto(this.convertHotelDto(room.getHotel()))
                 .build();
     }

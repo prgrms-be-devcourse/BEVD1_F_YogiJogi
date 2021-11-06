@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @Slf4j
+@ActiveProfiles("test")
 public class HotelServiceTest {
 
   private static final String TEST_HOTEL_NAME = "some hotel name";
@@ -68,7 +70,7 @@ public class HotelServiceTest {
         throws Exception {
       return Stream.of(
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
@@ -96,7 +98,7 @@ public class HotelServiceTest {
           ), //  Hotel에 속한 방들이 모두 TEST_BASE_DATE의 +1일 이내에 예약이 되어 있을 경우
 
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT + 1).build(),
@@ -108,7 +110,7 @@ public class HotelServiceTest {
           ),
 
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT - 1).build(),
@@ -120,7 +122,7 @@ public class HotelServiceTest {
           ),
 
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
@@ -164,7 +166,7 @@ public class HotelServiceTest {
         throws Exception {
       return Stream.of(
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()
@@ -192,7 +194,7 @@ public class HotelServiceTest {
           ), //  Hotel에 속한 방들이 모두 TEST_BASE_DATE의 +1일 이내에 예약이 되어 있을 경우
 
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT + 1).build(),
@@ -204,7 +206,7 @@ public class HotelServiceTest {
           ),
 
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT - 1).build(),
@@ -216,7 +218,7 @@ public class HotelServiceTest {
           ),
 
           Arguments.of(
-              Hotel.builder().name(TEST_HOTEL_NAME).build()
+              Hotel.builder().name(TEST_HOTEL_NAME).province(Province.Seoul1).build()
                   .addRooms(
                       List.of(
                           Room.builder().maxGuest(TEST_GUEST_CNT).build()

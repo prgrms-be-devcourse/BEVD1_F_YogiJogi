@@ -69,12 +69,7 @@ class ReservationServiceTest {
         LocalDate checkOut = LocalDate.now().plusDays(2);
 
         ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
-                .reservationUserDto(
-                        ReservationUserDto.builder()
-                                .id(savedUserId)
-                                .name("chaeWon").build()
-                )
-                .build();
+                .id(savedUserId).name("chaeWon").build();
 
         Long savedReservationId =  reservationService.save(reservationRequestDto,savedRoomId1,checkIn,checkOut);
         Reservation findReservation = reservationRepository.getById(savedReservationId);
@@ -110,12 +105,7 @@ class ReservationServiceTest {
         LocalDate checkOut = LocalDate.now().plusDays(2);
 
         ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
-                .reservationUserDto(
-                        ReservationUserDto.builder()
-                                .id(savedUserId)
-                                .name("chaeWon").build()
-                )
-                .build();
+                .id(savedUserId).name("chaeWon").build();
 
         Long savedReservationId =  reservationService.save(reservationRequestDto,savedRoomId1,checkIn,checkOut);
         List<ReservationResponseDto> reservationResponseDtos = reservationService.findByUserId(savedUserId);
