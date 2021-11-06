@@ -2,6 +2,7 @@ package com.programmers.yogijogi.entity.dto;
 
 import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,8 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-@NoArgsConstructor
+@AllArgsConstructor
 public class ReservationRequestDto {
-    private ReservationUserDto reservationUserDto;
-
-    public ReservationRequestDto(ReservationUserDto reservationUserDto) {
-        this.reservationUserDto = reservationUserDto;
-    }
+    private Long id;
+    private String name;
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,20 +30,32 @@ public class ReservationService {
     ReservationConverter reservationConverter;
 
     @Transactional
-    public Long save(ReservationRequestDto reservationRequestDto, Long roomId, LocalDate checkIn,LocalDate chekOut) {
-        Reservation reservation = reservationRepository.save(reservationConverter
-                .convertReservation(reservationRequestDto,roomId,checkIn,chekOut));
+    public Long save(ReservationRequestDto reservationRequestDto, Long roomId, LocalDate checkIn, LocalDate chekOut) {
+        Long userId = reservationRequestDto.getId();
+        User user;
+        if(Objects.nonNull(userId)) {
+             user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
+        }
+        else {
+            user = userRepository.save(User.builder().name(reservationRequestDto.getName()).build());
+        }
+
+        Reservation reservation = reservationConverter.convertReservation(reservationRequestDto, roomId, checkIn, chekOut);
+        reservation = reservationRepository.save(reservation);
+        user.addReservation(reservation);
         return reservation.getId();
     }
 
+    @Transactional
     public ReservationResponseDto findId(Long reservationId) {
-        Reservation reservation =reservationRepository.getById(reservationId);
+        Reservation reservation = reservationRepository.getById(reservationId);
         return reservationConverter.convertReservationResponseDto(reservation);
     }
 
     //userId 통해서 예약 조회
     public List<ReservationResponseDto> findByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()->new NotFoundException(ErrorMessage.USER_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
         List<Reservation> reservations = reservationRepository.getAllByUser(user);
         return reservations.stream().map(reservationConverter::convertReservationResponseDto).collect(toList());
     }

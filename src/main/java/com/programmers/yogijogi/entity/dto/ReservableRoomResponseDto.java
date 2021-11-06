@@ -13,4 +13,8 @@ public class ReservableRoomResponseDto {
     private int stock;
     private int maxGuest;
     private ImageResponseDto imageResponseDto;
+
+    public void setImageResponseDto(ImageResponseDto imageResponseDto) {
+        this.imageResponseDto = imageResponseDto;
+    }
 }

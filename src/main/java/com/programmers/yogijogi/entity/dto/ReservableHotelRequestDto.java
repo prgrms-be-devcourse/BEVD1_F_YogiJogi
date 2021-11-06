@@ -32,5 +32,4 @@ public class ReservableHotelRequestDto {
     this.themes = themes;
     return this;
   }
-
 }

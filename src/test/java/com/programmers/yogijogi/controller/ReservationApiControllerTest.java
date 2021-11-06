@@ -72,15 +72,11 @@ public class ReservationApiControllerTest {
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = LocalDate.now().plusDays(2);
 
-        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
-                .reservationUserDto(
-                        ReservationUserDto.builder().name("chaeWon").build()
-                )
-                .build();
+        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder().name("chaeWon").build();
 
-        mockMvc.perform(post("/hotels/{hotelId}/{roomId}/order", hotelId, roomId)
-                        .param("chekIn", String.valueOf(LocalDate.now().plusDays(1)))
-                        .param("chekOut", String.valueOf(LocalDate.now().plusDays(4)))
+        mockMvc.perform(post("/orders/{roomId}", roomId)
+                        .param("checkIn", String.valueOf(LocalDate.now().plusDays(1)))
+                        .param("checkOut", String.valueOf(LocalDate.now().plusDays(4)))
                         .content(objectMapper.writeValueAsString(reservationRequestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -113,13 +109,8 @@ public class ReservationApiControllerTest {
         LocalDate checkIn = LocalDate.now();
         LocalDate checkOut = LocalDate.now().plusDays(2);
 
-        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
-                .reservationUserDto(
-                        ReservationUserDto.builder()
-                                .id(userId)
-                                .name("chaeWon").build()
-                )
-                .build();
+        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder().id(userId)
+                .name("chaeWon").build();
 
         Long savedReservationId = reservationService.save(reservationRequestDto, roomId, checkIn, checkOut);
 

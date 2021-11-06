@@ -21,14 +21,13 @@ public class ReservationApiController {
         this.reservationService = reservationService;
     }
 
-    @PostMapping("hotels/{hotelId}/{roomId}/order")
+    @PostMapping("/orders/{roomId}")
     public ResponseEntity<ReservationResponseDto> createReservation(
-            @PathVariable("hotelId") Long hotelId,
             @PathVariable("roomId") Long roomId,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate chekIn,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate chekOut,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate checkOut,
             @Valid @RequestBody ReservationRequestDto reservationRequestDto) {
-        Long reservationId = reservationService.save(reservationRequestDto,roomId,chekIn,chekOut);
+        Long reservationId = reservationService.save(reservationRequestDto,roomId,checkIn,checkOut);
         ReservationResponseDto reservationResponseDto = reservationService.findId(reservationId);
         return ResponseEntity.ok(reservationResponseDto);
     }

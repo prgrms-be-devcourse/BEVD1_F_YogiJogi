@@ -20,24 +20,23 @@ public class ReservationConverter {
     }
 
     // dto -> entity
-    public Reservation convertReservation(ReservationRequestDto reservationRequestDto, Long roomId, LocalDate chekIn, LocalDate chekOut) {
+    public Reservation convertReservation(ReservationRequestDto reservationRequestDto, Long roomId, LocalDate checkIn, LocalDate checkOut) {
         return Reservation.builder()
-                .checkOut(chekOut)
-                .checkIn(chekIn)
-                .user(this.convertUser(reservationRequestDto.getReservationUserDto()))
+                .checkOut(checkOut)
+                .checkIn(checkIn)
+                .user(this.convertUser(reservationRequestDto))
                 .room(roomRepository.getById(roomId))
                 .build();
     }
 
     // dto -> entity
-    public User convertUser(ReservationUserDto reservationUserDto) {
+    public User convertUser(ReservationRequestDto reservationRequestDto) {
         return User.builder()
-                .id(reservationUserDto.getId())
-                .name(reservationUserDto.getName())
+                .id(reservationRequestDto.getId())
+                .name(reservationRequestDto.getName())
                 .build();
 
     }
-
 
     // entity -> dto
     public ReservationResponseDto convertReservationResponseDto(Reservation reservation) {

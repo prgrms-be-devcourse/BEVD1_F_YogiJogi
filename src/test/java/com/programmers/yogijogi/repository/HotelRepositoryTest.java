@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ import static org.hamcrest.Matchers.is;
 
 @DataJpaTest
 @Slf4j
+@ActiveProfiles("test")
 class HotelRepositoryTest {
 
   @Autowired
