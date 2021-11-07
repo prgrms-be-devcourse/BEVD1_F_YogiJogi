@@ -3,6 +3,7 @@ package com.programmers.yogijogi.entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class UserTest {
 
     @Test
