@@ -43,4 +43,8 @@ public class User {
 
         return this;
     }
+
+    public void updateUser(String name) {
+        this.name = name;
+    }
 }
