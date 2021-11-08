@@ -46,7 +46,7 @@ class UserApiControllerTest {
                 .build();
 
 
-        mockMvc.perform(post("/members")
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -68,7 +68,7 @@ class UserApiControllerTest {
                 .build();
 
 
-        mockMvc.perform(put("/members/{id}",userId)
+        mockMvc.perform(put("/users/{id}",userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -78,11 +78,6 @@ class UserApiControllerTest {
 
     @Test
     void findUser() throws Exception {
-//        @GetMapping("/members/{id}")
-//        public ResponseEntity<UserDetailDto> findUser(@PathVariable("id") Long id) {
-//            UserDetailDto userDetailDto = userService.findOne(id);
-//            return ResponseEntity.ok(userDetailDto);
-//        }
 
         UserCreateRequestDto userCreateRequestDto = UserCreateRequestDto.builder()
                 .name("KIM")
@@ -91,7 +86,7 @@ class UserApiControllerTest {
         UserCreateResponseDto saveUser = userService.join(userCreateRequestDto);
         Long userId = saveUser.getId();
 
-        mockMvc.perform(get("/members/{id}", userId)
+        mockMvc.perform(get("/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());

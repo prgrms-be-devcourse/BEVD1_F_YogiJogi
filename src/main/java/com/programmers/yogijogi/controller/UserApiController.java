@@ -25,7 +25,7 @@ public class UserApiController {
     private final UserService userService;
 
     //회원가입
-    @PostMapping("/members")
+    @PostMapping("/users")
     public ResponseEntity<UserCreateResponseDto> saveUser(@RequestBody @Valid
                                                      UserCreateRequestDto userCreateRequestDto) {
 
@@ -35,7 +35,7 @@ public class UserApiController {
     }
 
     //회원정보 수정
-    @PutMapping("/members/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<UserUpdateResponseDto>  updateUser(@PathVariable("id") Long id,
                                                                  @RequestBody @Valid UserUpdateRequestDto userUpdateRequestDto) {
         UserUpdateResponseDto dto = userService.update(id, userUpdateRequestDto.getName());
@@ -43,7 +43,7 @@ public class UserApiController {
     }
 
     //회원정보 조회
-    @GetMapping("/members/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<UserDetailDto> findUser(@PathVariable("id") Long id) {
         UserDetailDto userDetailDto = userService.findOne(id);
         return ResponseEntity.ok(userDetailDto);
