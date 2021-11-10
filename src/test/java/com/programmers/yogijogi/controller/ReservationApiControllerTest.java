@@ -123,41 +123,41 @@ public class ReservationApiControllerTest {
                 .andDo(print());
     }
 
-//
-//    @Test
-//    void deleteReservationTest() throws Exception {
-//        Hotel hotel1 = Hotel.builder()
-//                .name("신라스테이")
-//                .build();
-//
-//        Room room1 = Room.builder()
-//                .name("디럭스룸")
-//                .price(70000)
-//                .stock(1)
-//                .maxGuest(2)
-//                .hotel(hotel1)
-//                .build();
-//
-//        User user = User.builder()
-//                .name("testUserName")
-//                .build();
-//
-//        userId = userRepository.save(user).getId();
-//        hotelId = hotelRepository.save(hotel1).getId();
-//        roomId = roomRepository.save(room1).getId();
-//
-//        LocalDate checkIn = LocalDate.now();
-//        LocalDate checkOut = LocalDate.now().plusDays(2);
-//
-//        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder().id(userId)
-//                .name("chaeWon").build();
-//
-//        Long savedReservationId = reservationService.save(reservationRequestDto, roomId, checkIn, checkOut);
-//
-//        mockMvc.perform(delete("/orders/{reservationId}", savedReservationId)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNoContent())
-//                .andDo(print());
-//    }
+
+    @Test
+    void deleteReservationTest() throws Exception {
+        Hotel hotel1 = Hotel.builder()
+                .name("신라스테이")
+                .build();
+
+        Room room1 = Room.builder()
+                .name("디럭스룸")
+                .price(70000)
+                .stock(1)
+                .maxGuest(2)
+                .hotel(hotel1)
+                .build();
+
+        User user = User.builder()
+                .name("testUserName")
+                .build();
+
+        userId = userRepository.save(user).getId();
+        hotelId = hotelRepository.save(hotel1).getId();
+        roomId = roomRepository.save(room1).getId();
+
+        LocalDate checkIn = LocalDate.now();
+        LocalDate checkOut = LocalDate.now().plusDays(2);
+
+        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder().id(userId)
+                .name("chaeWon").build();
+
+        Long savedReservationId = reservationService.save(reservationRequestDto, roomId, checkIn, checkOut);
+
+        mockMvc.perform(delete("/orders/{reservationId}", savedReservationId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+    }
 }
 
