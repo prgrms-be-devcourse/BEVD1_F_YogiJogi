@@ -123,7 +123,6 @@ public class ReservationApiControllerTest {
                 .andDo(print());
     }
 
-
     @Test
     void deleteReservationTest() throws Exception {
         Hotel hotel1 = Hotel.builder()
