@@ -40,4 +40,10 @@ public class ReservationApiController {
         return ResponseEntity.ok(reservationResponseDtos);
     }
 
+    @DeleteMapping("orders/{reservationId}")
+    public ResponseEntity<Long> deleteReservationByReservationId(
+            @PathVariable(value = "reservationId") Long reservationId) {
+        reservationService.deleteReservation(reservationId);
+        return ResponseEntity.noContent().build();
+    }
 }
