@@ -9,6 +9,7 @@ import com.programmers.yogijogi.exception.NotFoundException;
 import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import java.util.Objects;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@Slf4j
+@Transactional
 public class ReservationService {
 
     @Autowired
@@ -29,7 +32,6 @@ public class ReservationService {
     @Autowired
     ReservationConverter reservationConverter;
 
-    @Transactional
     public Long save(ReservationRequestDto reservationRequestDto, Long roomId, LocalDate checkIn, LocalDate chekOut) {
         Long userId = reservationRequestDto.getId();
         User user;
@@ -47,9 +49,8 @@ public class ReservationService {
         return reservation.getId();
     }
 
-    @Transactional
     public ReservationResponseDto findId(Long reservationId) {
-        Reservation reservation = reservationRepository.getById(reservationId);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new NotFoundException(ErrorMessage.RESERVATION_NOT_FOUND));
         return reservationConverter.convertReservationResponseDto(reservation);
     }
 
@@ -58,5 +59,11 @@ public class ReservationService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
         List<Reservation> reservations = reservationRepository.getAllByUser(user);
         return reservations.stream().map(reservationConverter::convertReservationResponseDto).collect(toList());
+    }
+
+    //soft delete
+    public void deleteReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new NotFoundException(ErrorMessage.RESERVATION_NOT_FOUND));
+        reservationRepository.deleteById(reservationId);
     }
 }

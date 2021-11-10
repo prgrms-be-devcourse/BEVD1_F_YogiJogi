@@ -6,7 +6,8 @@ import com.programmers.yogijogi.entity.Room;
 import com.programmers.yogijogi.entity.User;
 import com.programmers.yogijogi.entity.dto.ReservationRequestDto;
 import com.programmers.yogijogi.entity.dto.ReservationResponseDto;
-import com.programmers.yogijogi.entity.dto.ReservationUserDto;
+import com.programmers.yogijogi.exception.NotFoundException;
+import com.programmers.yogijogi.exception.errors.ErrorMessage;
 import com.programmers.yogijogi.repository.HotelRepository;
 import com.programmers.yogijogi.repository.ReservationRepository;
 import com.programmers.yogijogi.repository.RoomRepository;
@@ -17,14 +18,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @SpringBootTest
 @Slf4j
-@Transactional
+@ActiveProfiles("test")
 class ReservationServiceTest {
 
     @Autowired
@@ -109,6 +114,44 @@ class ReservationServiceTest {
 
         Long savedReservationId =  reservationService.save(reservationRequestDto,savedRoomId1,checkIn,checkOut);
         List<ReservationResponseDto> reservationResponseDtos = reservationService.findByUserId(savedUserId);
-        Assertions.assertThat(savedUserId).isEqualTo(reservationResponseDtos.get(0).getReservationUserDto().getId());
+         Assertions.assertThat(savedUserId).isEqualTo(reservationResponseDtos.get(0).getReservationUserDto().getId());
     }
+
+    @Test
+    @DisplayName("사용자는 예약을 취소할수 있어야한다")
+    void deleteReservation(){
+        Hotel hotel1 = Hotel.builder()
+                .name("신라스테이")
+                .build();
+
+        Room room1 = Room.builder()
+                .name("디럭스룸")
+                .price(70000)
+                .stock(1)
+                .maxGuest(2)
+                .hotel(hotel1)
+                .build();
+
+        User user = User.builder()
+                .name("testUserName")
+                .build();
+
+        savedUserId = userRepository.save(user).getId();
+        savedHotelId = hotelRepository.save(hotel1).getId();
+        savedRoomId1 = roomRepository.save(room1).getId();
+
+        LocalDate checkIn = LocalDate.now();
+        LocalDate checkOut = LocalDate.now().plusDays(2);
+
+        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder()
+                .id(savedUserId).name("chaeWon").build();
+
+        Long savedReservationId =  reservationService.save(reservationRequestDto,savedRoomId1,checkIn,checkOut);
+        reservationService.deleteReservation(savedReservationId);
+
+        assertThrows(com.programmers.yogijogi.exception.NotFoundException.class, () -> reservationService.findId(savedReservationId));
+
+
+    }
+
 }

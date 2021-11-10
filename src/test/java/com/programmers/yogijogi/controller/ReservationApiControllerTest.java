@@ -15,21 +15,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+@ActiveProfiles("test")
 public class ReservationApiControllerTest {
 
     @Autowired
@@ -119,5 +122,42 @@ public class ReservationApiControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+//
+//    @Test
+//    void deleteReservationTest() throws Exception {
+//        Hotel hotel1 = Hotel.builder()
+//                .name("신라스테이")
+//                .build();
+//
+//        Room room1 = Room.builder()
+//                .name("디럭스룸")
+//                .price(70000)
+//                .stock(1)
+//                .maxGuest(2)
+//                .hotel(hotel1)
+//                .build();
+//
+//        User user = User.builder()
+//                .name("testUserName")
+//                .build();
+//
+//        userId = userRepository.save(user).getId();
+//        hotelId = hotelRepository.save(hotel1).getId();
+//        roomId = roomRepository.save(room1).getId();
+//
+//        LocalDate checkIn = LocalDate.now();
+//        LocalDate checkOut = LocalDate.now().plusDays(2);
+//
+//        ReservationRequestDto reservationRequestDto = ReservationRequestDto.builder().id(userId)
+//                .name("chaeWon").build();
+//
+//        Long savedReservationId = reservationService.save(reservationRequestDto, roomId, checkIn, checkOut);
+//
+//        mockMvc.perform(delete("/orders/{reservationId}", savedReservationId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNoContent())
+//                .andDo(print());
+//    }
 }
 
