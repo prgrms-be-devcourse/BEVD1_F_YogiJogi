@@ -1,29 +1,24 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yogijogi
-    username: yongjin
-    password: 1111
-  #    driver-class-name: org.h2.Driver
+    driver-class-name: org.h2.Driver
 #    username: sa
 #    password: sa
 #    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    url: jdbc:h2:~/yogijogi;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
   jpa:
     show-sql: true
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
-      hibernate:
-#        enable_lazy_load_no_trans: true
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      hibernate.format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true
       path: /h2-console
-  profiles:
-    active: aws
 
 logging:
   level:
@@ -37,7 +32,6 @@ server:
     encoding:
       charset: UTF-8
       force: true
-  port: 9092
 
 cloud:
   aws:
@@ -50,3 +44,7 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+property:
+  test:
+    imageSource: src/test/resources/images/test.jpg
